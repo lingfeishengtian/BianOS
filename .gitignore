@@ -1,0 +1,5 @@
+# Honestly the only thing we don't need is the build folder
+# In case make clean is forgotten to be called, gitignore will ignore the output os.iso file and build
+
+build
+os.iso
