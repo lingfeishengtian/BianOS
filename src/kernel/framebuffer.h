@@ -17,7 +17,7 @@ enum Colours{
 	WHITE
 };
 
-extern unsigned char * const video_buffer;
+#define VIDEO_BUFFER 0x000B8000
 
 /** print_char:
  * Writes a single character with specified background and foreground color to specified position cell.
