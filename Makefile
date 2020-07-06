@@ -2,8 +2,8 @@
 OUTPUT = build
 SOURCE = src
 
-C_FILES = $(addprefix ${SOURCE}/, kernel/*.c)
-C_HEADERS = $(addprefix ${SOURCE}/, kernel/*.h)
+C_FILES = $(addprefix ${SOURCE}/, drivers/*.c kernel/*.c)
+C_HEADERS = $(addprefix ${SOURCE}/, drivers/*.h kernel/*.h)
 
 C_SOURCES = $(wildcard ${C_FILES})
 HEADERS = $(wildcard ${C_HEADERS})
@@ -24,7 +24,7 @@ os.iso: $(OUTPUT)/kernel.elf
 	cp -r $(SOURCE)/iso $(OUTPUT)/iso
 	cp $^ $(OUTPUT)/iso/boot/kernel.elf
 	genisoimage -R                                        \
-                    -b boot/grub/stage2_eltorito             \
+                    -b boot/grub/stage2_eltorito              \
                     -no-emul-boot                             \
                     -boot-load-size 4                         \
                     -A os                                     \
