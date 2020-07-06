@@ -8,12 +8,13 @@ void miniPrint(char * str){
 		print_char(i * 2, str[i], LIGHT_GREY, BLACK);
 		++i;
 	}
+	cursor_move(i);
 }
 
 // Start here
 int main(){
-	miniPrint("Welcome to BianOS. CURSOR is enabled by default.");	
+	//miniPrint("Welcome to BianOS. CURSOR is enabled by default.");	
+	miniPrint("ftkynormpgsyghwljsksjtccpbdjasokwkfzjivmnklxhedmjtixywuwtfvvwpplhkmjssyrhmrgseab");
 	
-	cursor_move(0x0054);
 	return 0;
 }
