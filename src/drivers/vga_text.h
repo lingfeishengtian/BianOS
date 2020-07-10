@@ -29,27 +29,47 @@ enum Colours{
 #define CURSOR_LOCATION_HIGH 0x0E
 #define CURSOR_LOCATION_LOW 0x0F
 
-/** print_char:
+#define ROWS 25
+#define COLS 80
+
+/** set_char:
  * Writes a single character with specified background and foreground color to specified position cell.
  * 
- * @param i The location in frame buffer. Must be divisible by 2 (first half is character, second half is foreground and background color
+ * @param i The location in frame buffer. Must be divisible by 2 (first half is character, second half is foreground and background color. If the value given is odd, then you will see funky results.
  * @param c The character to be printed.
  * @param tc The text color.
  * @param bg Background color.
  */
-void print_char(unsigned int i, char c, enum Colours tc, enum Colours bg);
+void set_char(unsigned int i, char c, enum Colours tc, enum Colours bg);
 
-/** cursor_toggle:
- * Toggles whether or not the cursor should be displayed. Takes in a 1 byte of data and uses bitwise and 0x1 to imitate boolean value.
- * Cursor will appear at an unknown location when toggled.
+/** get_char:
+ * Retrieves the character at the specified location.
+ * The color and character is not separated, so you can retrieve a character with a number and the color of that character with that number plus 1.
  *
- * @param t Enable or disable. 1 for disable, 0 for enable. Seems counter-intuitive, but that's just how VGA Text Mode works!
+ * @param loc Location to retrieve. You can also retrieve color with this location.
  */
-void cursor_toggle(unsigned char t);
+char get_char(unsigned int loc);
 
-/** cursor_move:
- * Moves cursor to a specified location.
+/** print:
+ * Print a string to the screen and moves the cursor to the location right after the printed string.
  *
- * @param pos The position cursor should travel to.
+ * If the string overflows, then the screen will scroll.
+ *
+ * @param str The string to be printed
+ * @param tc The text color
+ * @param bg The background color
  */
-void cursor_move(unsigned short pos);
+void print(char* str, enum Colours tc, enum Colours bg);
+
+//TODO: USE __VA_ARGS__ to create something similar to printf
+/** print:
+ * Same thing as the function above exept with default colors: text color is light grey, background color is black.
+ *
+ * @param str The string to be printed
+ */
+void printd(char* str);
+
+/** clr_screen:
+ * Clears the screen of everything.
+ */
+void clr_screen();
