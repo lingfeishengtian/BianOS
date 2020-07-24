@@ -57,9 +57,9 @@ $(OUTPUT)/kernel.elf: $(OUTPUT)/loader.o $(OBJ)
 
 # run target
 run: os.iso
-	qemu-system-i386 -boot d -cdrom os.iso -m 10240
+	qemu-system-i386 -boot d -cdrom os.iso -m 10240 -serial stdio
 
-# qemu debug to monitor registers, memory, etc.
+# qemu debug to monitor registers, memory, etc. However, there is no serial output to stdio.
 qemu-monitor: os.iso
 	qemu-system-i386 -boot d -cdrom os.iso -m 10240 -monitor stdio
 

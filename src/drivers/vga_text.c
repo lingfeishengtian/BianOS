@@ -36,8 +36,6 @@ short get_cursor_loc();
  */
 void scroll();
 
-// Give all functions a purpose
-
 void set_char(unsigned int i, char c, enum Colours tc, enum Colours bg){
 	unsigned char * const video_buffer = (unsigned char *) VIDEO_BUFFER;
 

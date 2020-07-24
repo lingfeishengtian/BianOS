@@ -1,4 +1,5 @@
 #include "../drivers/vga_text.h"
+#include "../drivers/serial.h"
 
 // Testing scrolling
 void test(){
@@ -12,10 +13,19 @@ void test(){
 	}
 }
 
+void initialize_serial_debugging(){
+	init_serial_port_default(SERIAL_COM1_PORT);
+	serial_write_char(SERIAL_COM1_PORT, 't');
+	serial_write_char(SERIAL_COM1_PORT, '\n');
+}
+
 // Start here
 int main(){
 	clr_screen();
 	printd("Welcome to BianOS. CURSOR is enabled by default.");
+    printd("operating system"); 
+
+	initialize_serial_debugging();
 
 	return 0;
 }
