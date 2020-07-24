@@ -5,7 +5,8 @@ A simple OS(if you even count it as an OS) to test out os dev.
 Building BianOS is fairly simple, setup your dependencies and execute a single command.
 
 ## Dependencies
-Please do not use any OS other than linux or mac for building. Building ELF files on Windows is a pain in the booty.
+I do not condone building this OS on Windows or any other non-UNIX based OS system.
+Building on Windows is a pain and from personal experience doesn't work well.
 
 **Required**
 - gcc: building and compiling c files
