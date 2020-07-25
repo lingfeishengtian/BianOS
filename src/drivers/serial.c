@@ -26,3 +26,15 @@ void init_serial_port_default(unsigned short com){
     serial_port_configure_baud_rate(com, 3);
     serial_port_configure_line_default(com);
 }
+
+void serial_write(unsigned short com, char* str){
+    while(*str != 0){
+        serial_write_char(com, *str);
+        ++str;
+    }
+}
+
+void serial_writeln(unsigned short com, char* str){
+    serial_write(com, str);
+    serial_write(com, "\n");
+}

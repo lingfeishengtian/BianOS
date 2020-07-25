@@ -53,6 +53,36 @@ void serial_port_configure_line_default(unsigned short com);
  */
 int is_serial_port_fifo_trasmit_empty(unsigned short com);
 
+/** serial_write_char:
+ * Checks the status of the output port and ensures the character being written is
+ * written successfully.
+ * 
+ * @param com The COM port address
+ * @param c The character to be written
+ */
 void serial_write_char(unsigned short com, unsigned char c);
 
+/** init_serial_port_default:
+ * Initialize the baud rate with a divisor of 3 and configure the current COM port
+ * to the default settings.
+ * 
+ * @param com The COM port address
+ */
 void init_serial_port_default(unsigned short com);
+
+/** serial_write:
+ * Write the specified string to the specified COM port address.
+ * 
+ * @param com The COM port address
+ * @param str The string to be written.
+ */
+void serial_write(unsigned short com, char* str);
+
+/** serial_writeln:
+ * Writes the specified string to the specified COM port address with an additional new line
+ * character.
+ * 
+ * @param com The COM port address
+ * @param str The string to be written
+ */
+void serial_writeln(unsigned short com, char* str);

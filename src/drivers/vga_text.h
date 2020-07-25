@@ -62,7 +62,7 @@ char get_char(unsigned int loc);
 void print(char* str, enum Colours tc, enum Colours bg);
 
 //TODO: USE __VA_ARGS__ to create something similar to printf
-/** print:
+/** printd:
  * Same thing as the function above exept with default colors: text color is light grey, background color is black.
  *
  * @param str The string to be printed
