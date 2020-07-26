@@ -23,6 +23,9 @@ Command for arch users:
 ```sh
 sudo pacman -S qemu qemu-arch-extra gcc base-devel nasm cdrtools gdb
 ```
+
+Mac users should have brew installed. Through brew, you can install the dependencies listed above.
+
 ## Make
 Assuming you understand how to use basic terminal commands, cd into the root directory and just run ```make``` which should create an os.iso file in the root directory and also a build folder.
 You can run ```make run``` to automatically build and launch the os from qemu.
