@@ -1,5 +1,6 @@
 #include "../drivers/vga_text.h"
 #include "debugger.h"
+#include "gdt/gdt.h"
 
 // Testing scrolling
 void test(){
@@ -21,6 +22,11 @@ int main(){
 	initialize_serial_debugging();
 	debug_writeln("Serial debugging initialized.");
 	print("Serial debugging with COM1 port has been initialized.\n", GREEN, BLACK);
+
+	printd("Initializing GDT...");
+	debug_writeln("Starting GDT init process.");
+	setup_gdt();
+	debug_writeln("Completed GDT init process.");
 
 	return 0;
 }

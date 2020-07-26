@@ -5,8 +5,8 @@ OUTPUT = build
 SOURCE = src
 
 # declare filenames before wildcarding in order to add source folder prefix
-C_FILES = $(addprefix ${SOURCE}/, drivers/*.c kernel/*.c)
-C_HEADERS = $(addprefix ${SOURCE}/, drivers/*.h kernel/*.h)
+C_FILES = $(addprefix ${SOURCE}/, drivers/*.c kernel/*.c kernel/gdt/*.c)
+C_HEADERS = $(addprefix ${SOURCE}/, drivers/*.h kernel/*.h kernel/gdt/*.h)
 
 # wildcard to find all c source and header files required to build
 C_SOURCES = $(wildcard ${C_FILES})
@@ -52,7 +52,7 @@ $(OUTPUT)%/.:
 	mkdir -p $@
 
 # kernel
-$(OUTPUT)/kernel.elf: $(OUTPUT)/loader.o $(OBJ) 
+$(OUTPUT)/kernel.elf: $(OUTPUT)/loader.o $(OUTPUT)/kernel/gdt/gdt_flush.o $(OBJ) 
 	ld ${LD_FLAGS} $^ -o $@
 
 # run target
