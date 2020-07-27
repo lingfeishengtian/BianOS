@@ -10,7 +10,7 @@ Building on Windows is a pain and from personal experience doesn't work well.
 
 **Required**
 - gcc: building and compiling c files
-- genisoimage: generating the iso image
+- genisoimage/mkisofs: generating the iso image
 - ld: linking all the files together
 - nasm: building and compiling assembly files
 - make: Makefiles
@@ -19,12 +19,26 @@ Building on Windows is a pain and from personal experience doesn't work well.
 - gdb: debugging
 - qemu-system-i386: running the OS in a virtual machine
 
+## Arch
 Command for arch users:
 ```sh
 sudo pacman -S qemu qemu-arch-extra gcc base-devel nasm cdrtools gdb
 ```
 
-Mac users should have brew installed. Through brew, you can install the dependencies listed above.
+## MacOS
+Mac users should have brew installed before starting to attempt compiling on mac.
+Run these commands to install 32 bit elf compiling utilities.
+
+```shell
+brew tap nativeos/i386-elf-toolchain
+brew install i386-elf-binutils i386-elf-gcc
+```
+
+Then run the following commands to install nasm, mkisofs, and qemu.
+
+```shell
+brew install nasm cdrtools qemu
+```
 
 ## Make
 Assuming you understand how to use basic terminal commands, cd into the root directory and just run ```make``` which should create an os.iso file in the root directory and also a build folder.
