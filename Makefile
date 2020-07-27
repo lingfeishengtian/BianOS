@@ -18,9 +18,15 @@ OBJ = ${C_SOURCES:${SOURCE}/%.c=${OUTPUT}/%.o}
 # do not delete build output folders if make is stopped abruptly
 .PRECIOUS: $(OUTPUT)/. $(OUTPUT)%/.
 
-# declare our compiler and debugger
-CC = gcc
+# find out if the OS is Mac
+uname = $(shell uname -s)
+is_darwin = $(filter Darwin,$(uname))
+
+# declare our compiler and debugger depending on the OS
+CC = $(if $(is_darwin), i386-elf-gcc, gcc)
 GDB = gdb
+LD = $(if $(is_darwin), i386-elf-ld, ld)
+ISO_MAKER = $(if $(is_darwin), mkisofs, genisoimage)
 
 # a BUNCH of flags required in order for our compiled files to not have unnecessary extra code
 # ALSO treat all warnings as errors
@@ -33,7 +39,7 @@ LD_FLAGS = -T link.ld -melf_i386
 os.iso: $(OUTPUT)/kernel.elf
 	cp -r $(SOURCE)/iso $(OUTPUT)/iso
 	cp $^ $(OUTPUT)/iso/boot/kernel.elf
-	genisoimage -R                                        \
+	${ISO_MAKER} -R                                        \
                     -b boot/grub/stage2_eltorito              \
                     -no-emul-boot                             \
                     -boot-load-size 4                         \
@@ -53,7 +59,7 @@ $(OUTPUT)%/.:
 
 # kernel
 $(OUTPUT)/kernel.elf: $(OUTPUT)/loader.o $(OUTPUT)/kernel/gdt/gdt_flush.o $(OBJ) 
-	ld ${LD_FLAGS} $^ -o $@
+	${LD} ${LD_FLAGS} $^ -o $@
 
 # run target
 run: os.iso
@@ -73,7 +79,7 @@ $(OUTPUT)/%.o: ${SOURCE}/%.s | $$(@D)/.
 	nasm $< -f elf -o $@
 
 .SECONDEXPANSION:
-$(OUTPUT)/%.bin: ${SOURCE}/%.asm | $$(@D)/.
+$(OUTPUT)/%.bin: check_os ${SOURCE}/%.asm | $$(@D)/.
 	nasm $< -f bin -o $@
 
 # remove build folder and iso output
