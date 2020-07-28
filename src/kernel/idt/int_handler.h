@@ -11,7 +11,8 @@ struct cpu_state{
  * See page 6-13 on the Intel documentation(https://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-vol-3a-part-1-manual.pdf)
  */
 struct stack_state{
-    unsigned int error_code, eip, cs, eflags;
+    unsigned int error_code;
+    unsigned int eip, cs, eflags;
 } __attribute__ ((packed));
 
 void interrupt_handler(struct cpu_state cpu, unsigned int interrupt, struct stack_state stack);
