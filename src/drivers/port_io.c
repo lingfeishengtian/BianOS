@@ -12,10 +12,10 @@ void port_byte_out(unsigned short port_addr, unsigned char data){
 
 unsigned short port_word_in(unsigned short port_addr){
 	unsigned short result;
-	__asm__("inb %%dx, %%ax" : "=a" (result) : "d" (port_addr));
+	__asm__("in %%dx, %%ax" : "=a" (result) : "d" (port_addr));
 	return result;
 }
 
 void port_word_out(unsigned short port_addr, unsigned short data){
-	__asm__("outb %%ax, %%dx" : : "a" (data), "d" (port_addr));
+	__asm__("out %%ax, %%dx" : : "a" (data), "d" (port_addr));
 }

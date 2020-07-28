@@ -28,5 +28,7 @@ int main(){
 	setup_gdt();
 	debug_writeln("Completed GDT init process.");
 
+
+	
 	return 0;
 }

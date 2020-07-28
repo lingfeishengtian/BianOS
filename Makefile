@@ -5,15 +5,19 @@ OUTPUT = build
 SOURCE = src
 
 # declare filenames before wildcarding in order to add source folder prefix
-C_FILES = $(addprefix ${SOURCE}/, drivers/*.c kernel/*.c kernel/gdt/*.c)
-C_HEADERS = $(addprefix ${SOURCE}/, drivers/*.h kernel/*.h kernel/gdt/*.h)
+# specifically, all the c source, header, and compiled assembly files.
+C_FILES = $(addprefix ${SOURCE}/, drivers/*.c kernel/*.c kernel/gdt/*.c kernel/idt/*.c)
+C_HEADERS = $(addprefix ${SOURCE}/, drivers/*.h kernel/*.h kernel/gdt/*.h kernel/idt/*.h)
+NASM_FILES = $(addprefix ${SOURCE}/, *.s drivers/*.s kernel/*.s kernel/gdt/*.s kernel/idt/*.s)
 
-# wildcard to find all c source and header files required to build
+# wildcard to find all c source and header files and assembly object files required to build
 C_SOURCES = $(wildcard ${C_FILES})
 HEADERS = $(wildcard ${C_HEADERS})
+NASM_SOURCES = $(wildcard ${NASM_FILES})
 
 # generate a list of all the compiled files
-OBJ = ${C_SOURCES:${SOURCE}/%.c=${OUTPUT}/%.o} 
+OBJ = ${C_SOURCES:${SOURCE}/%.c=${OUTPUT}/%.o}
+OBJ += ${NASM_SOURCES:${SOURCE}/%.s=${OUTPUT}/%.o}
 
 # do not delete build output folders if make is stopped abruptly
 .PRECIOUS: $(OUTPUT)/. $(OUTPUT)%/.
@@ -58,7 +62,7 @@ $(OUTPUT)%/.:
 	mkdir -p $@
 
 # kernel
-$(OUTPUT)/kernel.elf: $(OUTPUT)/loader.o $(OUTPUT)/kernel/gdt/gdt_flush.o $(OBJ) 
+$(OUTPUT)/kernel.elf: $(OBJ) 
 	${LD} ${LD_FLAGS} $^ -o $@
 
 # run target
@@ -79,7 +83,7 @@ $(OUTPUT)/%.o: ${SOURCE}/%.s | $$(@D)/.
 	nasm $< -f elf -o $@
 
 .SECONDEXPANSION:
-$(OUTPUT)/%.bin: check_os ${SOURCE}/%.asm | $$(@D)/.
+$(OUTPUT)/%.bin: ${SOURCE}/%.asm | $$(@D)/.
 	nasm $< -f bin -o $@
 
 # remove build folder and iso output
