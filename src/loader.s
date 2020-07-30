@@ -1,6 +1,6 @@
 global loader					;entry point for ELF
 
-[extern main]
+[extern module_main]
 
 MAGIC 		equ 0x1BADB002            		;this magic number is required for GRUB to verify the boot
 ALIGN_MODULES   equ 0x00000001      		;tell GRUB to align modules
@@ -19,8 +19,12 @@ align 4						;grub requires aligned by 4 offsets to detect the headers
 	dd ALIGN_MODULES
 	dd CHECKSUM	
 
+mov esp, kernel_stack + KERNEL_STACK	;setup stack for programming in c: point stack to top (stack grows downward)
 loader:						;entry point defined earlier
-	mov esp, kernel_stack + KERNEL_STACK	;setup stack for programming in c: point stack to top (stack grows downward)
-	call main				;call kernel main
+	;call main				;call kernel main
+	add esp, 4
+	push ebx
+	call module_main
+
 .loop:
 	jmp .loop				;loop forever to hang the OS
