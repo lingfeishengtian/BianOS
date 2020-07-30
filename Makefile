@@ -6,9 +6,9 @@ SOURCE = src
 
 # declare filenames before wildcarding in order to add source folder prefix
 # specifically, all the c source, header, and compiled assembly files.
-C_FILES = $(addprefix ${SOURCE}/, drivers/*.c kernel/*.c kernel/gdt/*.c kernel/idt/*.c)
-C_HEADERS = $(addprefix ${SOURCE}/, drivers/*.h kernel/*.h kernel/gdt/*.h kernel/idt/*.h)
-NASM_FILES = $(addprefix ${SOURCE}/, *.s drivers/*.s kernel/*.s kernel/gdt/*.s kernel/idt/*.s)
+C_FILES = $(addprefix ${SOURCE}/, drivers/*.c drivers/hardware/*.c kernel/*.c kernel/gdt/*.c kernel/idt/*.c kernel/idt/pic/*.c)
+C_HEADERS = $(addprefix ${SOURCE}/, drivers/*.h drivers/hardware/*.h kernel/*.h kernel/gdt/*.h kernel/idt/*.h kernel/idt/pic/*.h)
+NASM_FILES = $(addprefix ${SOURCE}/, *.s drivers/*.s drivers/hardware/*.s kernel/*.s kernel/gdt/*.s kernel/idt/*.s kernel/idt/pic/*.s)
 
 # wildcard to find all c source and header files and assembly object files required to build
 C_SOURCES = $(wildcard ${C_FILES})

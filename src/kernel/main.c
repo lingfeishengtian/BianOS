@@ -1,6 +1,7 @@
 #include "../drivers/vga_text.h"
 #include "debugger.h"
 #include "gdt/gdt.h"
+#include "idt/idt.h"
 
 // Testing scrolling
 void test(){
@@ -28,7 +29,8 @@ int main(){
 	setup_gdt();
 	debug_writeln("Completed GDT init process.");
 
-
+	printd("Initializing IDT...");
+	setup_idt();
 	
 	return 0;
 }
