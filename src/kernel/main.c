@@ -16,7 +16,6 @@
 // 	}
 // }
 
-// Start here
 int main(){
 	clr_screen();
 	printd("Welcome to BianOS. CURSOR is enabled by default.\n");
@@ -25,12 +24,12 @@ int main(){
 	debug_writeln("Serial debugging initialized.");
 	print("Serial debugging with COM1 port has been initialized.\n", GREEN, BLACK);
 
-	printd("Initializing GDT...");
+	printd("Initializing GDT...\n");
 	debug_writeln("Starting GDT init process.");
 	setup_gdt();
 	debug_writeln("Completed GDT init process.");
 
-	printd("Initializing IDT...");
+	printd("Initializing IDT...\n");
 	setup_idt();
 	
 	return 0;
@@ -38,6 +37,7 @@ int main(){
 
 typedef void (*call_module_t) (void);
 
+// Initialize the serial debugger, gdt, idt, etc.
 int module_main(unsigned int mbinfo){
 	main();
 	debug_writeln("Starting module code.");
