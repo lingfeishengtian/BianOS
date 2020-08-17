@@ -24,3 +24,17 @@ void pic_remap(unsigned char offset1, unsigned char offset2){
 
     asm("sti"); //enable interrupts
 }
+
+void pic_eoi(int interrupt){
+    // Verify the PIC_EOI is needed
+    if(interrupt < PIC1_START_INTERRUPT || interrupt > PIC2_END_INTERRUPT){
+        return;
+    }
+
+    // The slave PIC only needed when the interrupt for the slave is called
+    if(interrupt >= PIC2_START_INTERRUPT){
+        port_byte_out(PIC2_COMMAND, PIC_EOI);
+    }
+    // The master PIC is always needed when PIC interrupt is called
+    port_byte_out(PIC1_COMMAND, PIC_EOI);
+}

@@ -1,8 +1,4 @@
-#include "idt.h"
 #include "pic/pic.h"
-
-#define PIC2_END_INTERRUPT   PIC2_START_INTERRUPT + 7
-#define PIC_EOI     0x20
 
 /** 
  * This struct will be the state of the cpu before the interrupt is handled. The programs running the interrupt assume all the registers will be the same afterwards.
@@ -31,9 +27,11 @@ struct stack_state{
  */
 void interrupt_handler(__attribute__((unused)) struct cpu_state cpu, unsigned int interrupt, __attribute__((unused)) struct stack_state stack);
 
-/** pic_eoi:
- * Tell the PIC that we ended the interrupt.
+/** register_handler:
+ * Assign an interrupt to an interrupt handler.
  * 
- * @param interrupt The interrupt code that was recieved to verify if the pic_eoi is needed or which PICs need it
+ * @param interrupt The interrupt code to assign
+ * @param handler A function pointer to a handler
+ * @return Returns 0 for success and 1 if the interrupt is taken.
  */
-void pic_eoi(int interrupt);
+void register_handler(unsigned int interrupt, void (*handler)());

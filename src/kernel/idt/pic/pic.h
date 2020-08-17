@@ -23,6 +23,12 @@
 #define ICW4_BUF_MASTER	0x0C		/* Buffered mode/master */
 #define ICW4_SFNM	0x10		/* Special fully nested (not) */
 
+// PIC has two parts, PIC1 and PIC2. We remap them to the following interrupts
+#define PIC1_START_INTERRUPT 0x20
+#define PIC2_START_INTERRUPT 0x28
+#define PIC2_END_INTERRUPT   PIC2_START_INTERRUPT + 7
+#define PIC_EOI     0x20
+
 /** pic_remap:
  * Remaps the PIC interrupt codes.
  * 
@@ -30,3 +36,10 @@
  * @param offset2 The PIC2 offset
  */
 void pic_remap(unsigned char offset1, unsigned char offset2);
+
+/** pic_eoi:
+ * Tell the PIC that we ended the interrupt.
+ * 
+ * @param interrupt The interrupt code that was recieved to verify if the pic_eoi is needed or which PICs need it
+ */
+void pic_eoi(int interrupt);

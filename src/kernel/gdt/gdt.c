@@ -1,9 +1,10 @@
 #include "gdt.h"
+#include "../debugger.h"
 
 /** gdt_flush:
  * Flush our segment registers
  */
-extern void gdt_flush(void);
+extern void gdt_flush(unsigned int);
 
 // We define our GDT now.
 struct gdt gdt_ptr;
@@ -50,5 +51,7 @@ void setup_gdt(){
     create_gdt_entry(0, 0, 0, 0, 0); // Null descriptor
     create_gdt_entry_default_granularity(1, 0, 0xFFFFFFFF, 0x9A); // Code segment
     create_gdt_entry_default_granularity(2, 0, 0xFFFFFFFF, 0x92); // Data segment
-    gdt_flush();
+
+    debug_writeln("Flushing");
+    gdt_flush((unsigned int) &gdt_ptr);
 }

@@ -1,5 +1,6 @@
 #include "idt.h"
 #include "pic/pic.h"
+#include "int_handler.h"
 #include "../debugger.h"
 #include "../../drivers/port_io.h"
 
@@ -7,7 +8,7 @@ struct idt_entry idt_entries[256];
 struct idt idt_ptr;
 
 // Use idt loader and interrupt handler generated from assembly
-extern void interrupt_handler_33(void);
+extern void interrupt_handler_33(int);
 extern int load_idt(void*); 
 
 /** internal create_idt_entry:
@@ -39,10 +40,22 @@ void create_idt_entry(int int_code, unsigned int entry){
      */
 }
 
-void setup_idt(){
-    // Create IDT_entry for 33
-    create_idt_entry(33, (unsigned int) interrupt_handler_33);
+unsigned char register_interrupt(unsigned int interrupt, void (*handler)()){
+    if(idt_entries[interrupt].selector & 0x08) return 1;
+    switch (interrupt)
+    {
+    case 33:
+        create_idt_entry(interrupt, (unsigned int) interrupt_handler_33);
+        break;
+    
+    default:
+        return 1;
+    }
+    register_handler(interrupt, handler);
+    return 0;
+}
 
+void setup_idt(){
     // Initialize IDT
     idt_ptr.address = (unsigned int) &idt_entries;
     idt_ptr.size = sizeof(struct idt_entry) * 256 - 1;

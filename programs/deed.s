@@ -1,6 +1,5 @@
  ; set eax to random number to read from the log afterwards
 bits 32
-extern debug_writeln
 
 section .text
 start:

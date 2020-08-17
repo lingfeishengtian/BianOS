@@ -1,4 +1,5 @@
 #include "../drivers/vga_text.h"
+#include "../drivers/hardware/keyboard.h"
 #include "debugger.h"
 #include "gdt/gdt.h"
 #include "idt/idt.h"
@@ -20,7 +21,6 @@ int main(){
 	clr_screen();
 	printd("Welcome to BianOS. CURSOR is enabled by default.\n");
 
-	initialize_serial_debugging();
 	debug_writeln("Serial debugging initialized.");
 	print("Serial debugging with COM1 port has been initialized.\n", GREEN, BLACK);
 
@@ -31,6 +31,10 @@ int main(){
 
 	printd("Initializing IDT...\n");
 	setup_idt();
+
+	if(register_interrupt(33, keyboard_interrupt) == 1){
+		printd("An error occured while trying to setup your keyboard driver!.");
+	}
 	
 	return 0;
 }

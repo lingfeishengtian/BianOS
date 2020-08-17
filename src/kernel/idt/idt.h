@@ -1,10 +1,7 @@
 /** The IDT
  * Similar to the GDT, but for interrupts.
  */
-
-// PIC has two parts, PIC1 and PIC2. We remap them to the following interrupts
-#define PIC1_START_INTERRUPT 0x20
-#define PIC2_START_INTERRUPT 0x28
+#include "pic/pic.h"
 
 /** idt:
  * size:
@@ -54,3 +51,12 @@ struct idt_entry{
  * Setups the keyboard and idt handlers.
  */
 void setup_idt();
+
+/** register_interrupt:
+ * Assign an interrupt to an interrupt handler and create an entry in the idt.
+ * 
+ * @param interrupt The interrupt code to assign
+ * @param handler A function pointer to a handler
+ * @return Returns 0 for success and 1 if the interrupt is taken or handler wasn't defined in the kernel.
+ */
+unsigned char register_interrupt(unsigned int interrupt, void (*handler)());

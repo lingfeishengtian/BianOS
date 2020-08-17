@@ -1,5 +1,15 @@
 #include "keyboard.h"
 #include "../port_io.h"
+#include "../vga_text.h"
+#include "../../kernel/idt/pic/pic.h"
+
+void keyboard_interrupt(){
+    // Print the typed text onto the screen
+    char str[2];
+    str[0] = keyboard_scan_code_to_ascii(read_scan_code());
+    pic_eoi(KEYBOARD_INTERRUPT_CODE);
+    printd(str);
+}
 
 unsigned char read_scan_code(void){
     return port_byte_in(KBD_DATA_PORT);
