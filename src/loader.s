@@ -2,11 +2,6 @@ global loader					;entry point for ELF
 
 [extern module_main]
 
-extern kernel_virtual_start
-extern kernel_virtual_end
-extern kernel_physical_start
-extern kernel_physical_end
-
 MAGIC 			equ 0x1BADB002            		;this magic number is required for GRUB to verify the boot
 ALIGN_MODULES   equ 0x00000001      			;tell GRUB to align modules	
 CHECKSUM		equ -(MAGIC + ALIGN_MODULES)	;the magic number + flags + checksum should equal 0
@@ -69,7 +64,7 @@ higher_kernel_entry:
 	add esp, 4
 	push ebx
 
-	call module_main			;call module_main
+	call module_main						;call module_main
 
 .loop:
-	jmp .loop				;loop forever to hang the OS
+	jmp .loop								;loop forever to hang the OS just in case the kernel returns

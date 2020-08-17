@@ -1,5 +1,4 @@
 #include "gdt.h"
-#include "../debugger.h"
 
 /** gdt_flush:
  * Flush our segment registers
@@ -52,6 +51,5 @@ void setup_gdt(){
     create_gdt_entry_default_granularity(1, 0, 0xFFFFFFFF, 0x9A); // Code segment
     create_gdt_entry_default_granularity(2, 0, 0xFFFFFFFF, 0x92); // Data segment
 
-    debug_writeln("Flushing");
     gdt_flush((unsigned int) &gdt_ptr);
 }

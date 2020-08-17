@@ -2,12 +2,13 @@ global gdt_flush        ;allow our code to be accessed by c
 
 section .text           ;start code!
 gdt_flush:
+    ;disable interrupts and load the gdt from parameter list
     cli
     mov eax, [esp + 4]
     lgdt [eax]
-    sti                 ;load our gdt_ptr from our gdt.h file
+    sti
     
-    mov ax, 0x10        ;0x10 is our data segment register in the gdt
+    mov ax, 0x10         ;0x10 is our data segment register in the gdt
     mov ds, ax
     mov es, ax
     mov ss, ax
