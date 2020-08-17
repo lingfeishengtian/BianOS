@@ -66,6 +66,9 @@ $(OUTPUT)/kernel.elf: $(OBJ)
 	${LD} ${LD_FLAGS} $^ -o $@
 
 # run target
+run-bochs: os.iso
+	bochs -f bochsrc.txt -q
+
 run: os.iso
 	qemu-system-i386 -boot d -cdrom os.iso -m 10240 -serial stdio
 

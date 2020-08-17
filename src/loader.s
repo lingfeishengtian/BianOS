@@ -18,16 +18,16 @@ PG_BIT			equ 0x80000000					;enable paging
 
 KERNEL_STACK	equ 8192					;establish kernel stack size in bytes
 
-;section .data
-;align 4096
-;global TMP_PAGE_DIRECTORY
-;TMP_PAGE_DIRECTORY:
+section .data
+align 4096
+global TMP_PAGE_DIRECTORY
+TMP_PAGE_DIRECTORY:
 ;Identity map first 4 MB of memory and 3 gib memory
 ;Paging table not needed because of 4 MiB page size
-	;dd 0x83									;binary 10000011 To set page size to 4 MiB, R/W to true, Present to true
-	;times(THREE_GB_INDEX - 1) dd 0			;fill the directory until 1 before the 3 gb index
-	;dd 0x83									;mark the higher half kernel page
-	;times(1024 - THREE_GB_INDEX - 1) dd 0	;fill the rest of the table
+	dd 0x83									;binary 10000011 To set page size to 4 MiB, R/W to true, Present to true
+	times(THREE_GB_INDEX - 1) dd 0			;fill the directory until 1 before the 3 gb index
+	dd 0x83									;mark the higher half kernel page
+	times(1024 - THREE_GB_INDEX - 1) dd 0	;fill the rest of the table
 
 section .bss					;use section bss in order to optimize and conserve space
 align 4
@@ -40,33 +40,32 @@ align 4							;grub requires aligned by 4 offsets to detect the headers
 	dd ALIGN_MODULES
 	dd CHECKSUM	
 
-;low_kernel_entry:
+loader:							;entry point defined earlier
 	;set page directory
-	;mov ecx, (TMP_PAGE_DIRECTORY - KERNEL_VBASE)
-	;mov cr3, ecx
+	mov ecx, (TMP_PAGE_DIRECTORY - KERNEL_VBASE)
+	mov cr3, ecx
 
 	;enable 4mib pages
-	;mov ecx, cr4
-	;or ecx, PSE_BIT
-	;mov cr4, ecx
+	mov ecx, cr4
+	or ecx, PSE_BIT
+	mov cr4, ecx
 
 	;set PG bit to enable paging
-	;mov ecx, cr0
-	;or ecx, PG_BIT
-	;mov cr0, ecx
+	mov ecx, cr0
+	or ecx, PG_BIT
+	mov cr0, ecx
 
 	;far jump to avoid reference relative jump
-	;lea ecx, [higher_kernel_entry]
-	;jmp ecx
+	lea ecx, [higher_kernel_entry]
+	jmp ecx
 
-;higher_kernel_entry:
+higher_kernel_entry:
 	;unmap first 4mib in the pdt also flush tlb
-	;mov dword [TMP_PAGE_DIRECTORY], 0
-	;invlpg [0]
+	mov dword [TMP_PAGE_DIRECTORY], 0
+	invlpg [0]
 
-mov esp, kernel_stack + KERNEL_STACK	;setup stack for programming in c: point stack to top (stack grows downward)
+	mov esp, kernel_stack + KERNEL_STACK	;setup stack for programming in c: point stack to top (stack grows downward)
 
-loader:							;entry point defined earlier
 	add esp, 4
 	push ebx
 

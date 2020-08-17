@@ -8,7 +8,7 @@ struct idt_entry idt_entries[256];
 struct idt idt_ptr;
 
 // Use idt loader and interrupt handler generated from assembly
-extern void interrupt_handler_33(int);
+extern void interrupt_handler_33(void);
 extern int load_idt(void*); 
 
 /** internal create_idt_entry:
