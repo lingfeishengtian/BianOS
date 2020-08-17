@@ -1,6 +1,12 @@
 # BianOS
 A simple OS(if you even count it as an OS) to test out os dev.
 
+### TODO
+- Build a page frame allocater
+- Create kmalloc and kfree
+- Write better documentation recent changes
+- Improve Bochs support
+
 # Building
 Building BianOS is fairly simple, setup your dependencies and execute a single command.
 
@@ -49,3 +55,5 @@ Additionally, ```make clean``` can be run to remove the build files and have fre
 The ISO uses legacy grub so the OS is backwards-compatible.
 
 GRUB initializes 32 bit protected mode and loads up the kernel from the specified loader label from loader.s.
+
+Loader then initializes basic identity mapped PSE paging to allow for basic initialization of the GDT, IDT, debugging drivers, etc.
