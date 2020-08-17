@@ -92,5 +92,4 @@ $(OUTPUT)/%.bin: ${SOURCE}/%.asm | $$(@D)/.
 # remove build folder and iso output
 clean:
 	rm -rf build os.iso
-	#rm -rf *.bin *.dis *.o os-image.bin *.elf
-	#rm -rf kernel/*.o boot/*.bin drivers/*.o boot/*.o cpu/*.o libc/*.o
+	rm -rf bochslog.txt com1.txt
