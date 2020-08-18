@@ -1,3 +1,6 @@
+#include <stdint.h>
+#include <stdbool.h>
+
 // Colors that are available for text color and background color
 enum Colours{
 	BLACK,
@@ -40,7 +43,7 @@ enum Colours{
  * @param tc The text color.
  * @param bg Background color.
  */
-void set_char(unsigned int i, char c, enum Colours tc, enum Colours bg);
+void set_char(uint32_t i, char c, enum Colours tc, enum Colours bg);
 
 /** get_char:
  * Retrieves the character at the specified location.
@@ -48,7 +51,7 @@ void set_char(unsigned int i, char c, enum Colours tc, enum Colours bg);
  *
  * @param loc Location to retrieve. You can also retrieve color with this location.
  */
-char get_char(unsigned int loc);
+char get_char(uint32_t loc);
 
 /** print:
  * Print a string to the screen and moves the cursor to the location right after the printed string.

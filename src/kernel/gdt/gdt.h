@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 /** gdt:
  * Size:
  * short -> 2 bytes
@@ -8,8 +10,8 @@
  * The location of the gdt table.
  */
 struct gdt {
-    unsigned short size;
-    unsigned int offset;
+    uint16_t size;
+    uint32_t offset;
 } __attribute__ ((packed));
 
 /** gdt_entry:
@@ -45,12 +47,12 @@ struct gdt {
  */
 struct gdt_entry
 {
-    unsigned short limit_low;
-    unsigned short base_low;
-    unsigned char base_middle;
-    unsigned char access;
-    unsigned char limit_high_and_flags;
-    unsigned char base_high;
+    uint16_t limit_low;
+    uint16_t base_low;
+    uint8_t base_middle;
+    uint8_t access;
+    uint8_t limit_high_and_flags;
+    uint8_t base_high;
 } __attribute__ ((packed));
 
 /** setup_gdt:

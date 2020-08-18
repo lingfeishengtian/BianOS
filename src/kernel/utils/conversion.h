@@ -1,1 +1,3 @@
-char* hex_to_ascii(unsigned int hex);
+#include <stdint.h>
+
+char* hex_to_ascii(uint32_t hex);

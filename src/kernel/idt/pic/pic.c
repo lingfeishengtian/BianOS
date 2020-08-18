@@ -1,7 +1,7 @@
 #include "pic.h"
 #include "../../../drivers/port_io.h"
 
-void pic_remap(unsigned char offset1, unsigned char offset2){
+void pic_remap(uint8_t offset1, uint8_t offset2){
     // ICW1 Initialize in cascaded mode and expect ICW4
     port_byte_out(PIC1_COMMAND, ICW1_INIT | ICW1_ICW4);
     port_byte_out(PIC2_COMMAND, ICW1_INIT | ICW1_ICW4);
@@ -25,7 +25,7 @@ void pic_remap(unsigned char offset1, unsigned char offset2){
     asm("sti"); //enable interrupts
 }
 
-void pic_eoi(int interrupt){
+void pic_eoi(uint32_t interrupt){
     // Verify the PIC_EOI is needed
     if(interrupt < PIC1_START_INTERRUPT || interrupt > PIC2_END_INTERRUPT){
         return;

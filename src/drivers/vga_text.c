@@ -12,7 +12,7 @@
  *
  * @param t Enable or disable. 0 for disable, 1 for enable.
  */
-void cursor_toggle(unsigned char t);
+void cursor_toggle(uint8_t t);
 
 /** cursor_move:
  *
@@ -22,34 +22,34 @@ void cursor_toggle(unsigned char t);
  *
  * @param pos The position cursor should travel to.
  */
-void cursor_move(unsigned short pos);
+void cursor_move(uint16_t pos);
 
 /** get_cursor_loc:
  * Get cursor location
  *
  * @return Returns a 16 bit location
  */
-short get_cursor_loc();
+uint16_t get_cursor_loc();
 
 /** scroll:
  * Shifts all text up a row.
  */
 void scroll();
 
-void set_char(unsigned int i, char c, enum Colours tc, enum Colours bg){
-	unsigned char * const video_buffer = (unsigned char *) VIDEO_BUFFER;
+void set_char(uint32_t i, char c, enum Colours tc, enum Colours bg){
+	uint8_t * const video_buffer = (uint8_t *) VIDEO_BUFFER;
 
 	video_buffer[i] = c;
 	video_buffer[i + 1] = ((bg & 0x0F) << 4) | (tc & 0x0F);
 }
 
-char get_char(unsigned int loc){
-	unsigned char * const video_buffer = (unsigned char *) VIDEO_BUFFER;
+char get_char(uint32_t loc){
+	uint8_t * const video_buffer = (uint8_t *) VIDEO_BUFFER;
 	
 	return video_buffer[loc];
 }
 
-void cursor_toggle(unsigned char t){
+void cursor_toggle(uint8_t t){
 	if(t & 0x1){
 		port_byte_out(VGA_INDEX, CURSOR_START_REG);
 		port_byte_out(VGA_DATA, 0x0E);
@@ -62,15 +62,15 @@ void cursor_toggle(unsigned char t){
 
 }
 
-void cursor_move(unsigned short pos){
+void cursor_move(uint16_t pos){
 	port_byte_out(VGA_INDEX, CURSOR_LOCATION_HIGH);
 	port_byte_out(VGA_DATA, (pos & 0xFF00) >> 8);
 	port_byte_out(VGA_INDEX, CURSOR_LOCATION_LOW);
 	port_byte_out(VGA_DATA, (pos & 0xFF));
 }
 
-short get_cursor_loc(){
-	short pos = 0;
+uint16_t get_cursor_loc(){
+	uint16_t pos = 0;
 	port_byte_out(VGA_INDEX, CURSOR_LOCATION_LOW);
 	pos |= port_byte_in(VGA_DATA);
 	port_byte_out(VGA_INDEX, CURSOR_LOCATION_HIGH);
@@ -91,8 +91,8 @@ void clr_screen(){
 void scroll(){
 	for(int i = 1; i < ROWS; ++i){
 		for(int j = 0; j < COLS; ++j){
-			const unsigned int pos = (i * COLS + j) * 2;
-			const unsigned char color = get_char(pos + 1);
+			const uint32_t pos = (i * COLS + j) * 2;
+			const uint8_t color = get_char(pos + 1);
 			set_char(pos - COLS * 2, get_char(pos), color & 0x0F, color >> 4);
 
 			if(i == ROWS - 1){
@@ -101,13 +101,13 @@ void scroll(){
 		}
 	}
 
-	const short cursor_pos = get_cursor_loc();
+	const uint16_t cursor_pos = get_cursor_loc();
 	cursor_move(cursor_pos - COLS);
 }
 
 void print(char* str, enum Colours tc, enum Colours bg){
-	short initial_pos = get_cursor_loc() * 2;
-	unsigned int i = 0;
+	uint16_t initial_pos = get_cursor_loc() * 2;
+	uint32_t i = 0;
 
 	while(str[i] != 0){
 		if(initial_pos >= COLS * ROWS * 2){

@@ -5,7 +5,7 @@
  * This struct contains the contents pushed by pusha
  */
 struct cpu_state{
-    unsigned int edi, esi, ebp, esp, ebx, edx, ecx, eax;
+    uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax;
 } __attribute__ ((packed));
 
 /**
@@ -13,8 +13,8 @@ struct cpu_state{
  * See page 6-13 on the Intel documentation(https://www.intel.com/content/dam/www/public/us/en/documents/manuals/64-ia-32-architectures-software-developer-vol-3a-part-1-manual.pdf)
  */
 struct stack_state{
-    unsigned int error_code;
-    unsigned int eip, cs, eflags;
+    uint32_t error_code;
+    uint32_t eip, cs, eflags;
 } __attribute__ ((packed));
 
 /** interrupt_handler:
@@ -25,7 +25,7 @@ struct stack_state{
  * @param interrupt The interrupt code that was called
  * @param stack Information pushed by the cpu
  */
-void interrupt_handler(__attribute__((unused)) struct cpu_state cpu, unsigned int interrupt, __attribute__((unused)) struct stack_state stack);
+void interrupt_handler(__attribute__((unused)) struct cpu_state cpu, int interrupt, __attribute__((unused)) struct stack_state stack);
 
 /** register_handler:
  * Assign an interrupt to an interrupt handler.
@@ -34,4 +34,4 @@ void interrupt_handler(__attribute__((unused)) struct cpu_state cpu, unsigned in
  * @param handler A function pointer to a handler
  * @return Returns 0 for success and 1 if the interrupt is taken.
  */
-void register_handler(unsigned int interrupt, void (*handler)());
+void register_handler(uint32_t interrupt, void (*handler)());

@@ -3,6 +3,7 @@
  * so now we have to remap them to available interrupts. The interrupts I'm using will be
  * using interrupts 0x20 for PIC1 and 0x28 for PIC2. (Intel reserved from 0x00 to 0x1F)
  */
+#include <stdint.h>
 
 #define PIC1		0x20		/* IO base address for master PIC */
 #define PIC2		0xA0		/* IO base address for slave PIC */
@@ -35,11 +36,11 @@
  * @param offset1 The PIC1 offset
  * @param offset2 The PIC2 offset
  */
-void pic_remap(unsigned char offset1, unsigned char offset2);
+void pic_remap(uint8_t offset1, uint8_t offset2);
 
 /** pic_eoi:
  * Tell the PIC that we ended the interrupt.
  * 
  * @param interrupt The interrupt code that was recieved to verify if the pic_eoi is needed or which PICs need it
  */
-void pic_eoi(int interrupt);
+void pic_eoi(uint32_t interrupt);

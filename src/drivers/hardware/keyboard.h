@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 #define KBD_DATA_PORT   0x60
 #define KEYBOARD_INTERRUPT_CODE 0x21
 
@@ -6,7 +8,7 @@
  * 
  * @return Returns the scan code found.
  */
-unsigned char read_scan_code(void);
+uint8_t read_scan_code(void);
 
 /** keyboard_scan_code_to_ascii:
  * Translates keyboard scan codes using the default US keyboard layout.
@@ -14,7 +16,7 @@ unsigned char read_scan_code(void);
  * @param scan_code The scan code received.
  * @return ASCII value
  */
-unsigned char keyboard_scan_code_to_ascii(unsigned char scan_code);
+uint8_t keyboard_scan_code_to_ascii(uint8_t scan_code);
 
 /** keyboard_interrupt:
  * The keyboard interrupt handler

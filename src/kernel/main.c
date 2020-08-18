@@ -5,7 +5,7 @@
 #include "idt/idt.h"
 #include "../grub_headers/multiboot.h"
 #include "utils/conversion.h"
-#include "mem/mem.h"
+#include "mem/kheap.h"
 
 // // Testing scrolling
 // void test(){
@@ -41,9 +41,9 @@ int kmain(){
 		printd("An error occured while trying to setup your keyboard driver!.");
 	}
 
-	printd(hex_to_ascii((unsigned int) kmalloc(20)));
+	printd(hex_to_ascii((uint32_t) kmalloc(20)));
 	printd("\n");
-	printd(hex_to_ascii((unsigned int) kmalloc(23)));
+	printd(hex_to_ascii((uint32_t) kmalloc(23)));
 	
 	return 0;
 }
@@ -60,12 +60,12 @@ typedef void (*call_module_t) (void);
  * @param mbinfo Module information
  * @return Return code
  */
-int module_main(unsigned int mbinfo){
+int module_main(uint32_t mbinfo){
 	kmain();
 	debug_writeln("Starting module code.");
 	mbinfo += 0xC0000000;
 	module_t* modules = (module_t*) (((multiboot_info_t*) mbinfo)->mods_addr + 0xC0000000); 
-    unsigned int address_of_module = modules->mod_start + 0xC0000000;
+    uint32_t address_of_module = modules->mod_start + 0xC0000000;
 	call_module_t start_program = (call_module_t) address_of_module;
     start_program();
 	return 0;

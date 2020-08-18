@@ -17,7 +17,7 @@ extern int load_idt(void*);
  * @param int_code The interrupt code(index) in the idt_entries array to create the entry
  * @param entry The entry address of the handler(from assembly file)
  */
-void create_idt_entry(int int_code, unsigned int entry){
+void create_idt_entry(int int_code, uint32_t entry){
     // Store the address in the struct
     idt_entries[int_code].entry_address_low = entry & 0xFFFF;
     idt_entries[int_code].entry_address_high = (entry >> 16) & 0xFFFF;
@@ -40,12 +40,12 @@ void create_idt_entry(int int_code, unsigned int entry){
      */
 }
 
-unsigned char register_interrupt(unsigned int interrupt, void (*handler)()){
+uint8_t register_interrupt(uint32_t interrupt, void (*handler)()){
     if(idt_entries[interrupt].selector & 0x08) return 1;
     switch (interrupt)
     {
     case 33:
-        create_idt_entry(interrupt, (unsigned int) interrupt_handler_33);
+        create_idt_entry(interrupt, (uint32_t) interrupt_handler_33);
         break;
     
     default:
@@ -57,7 +57,7 @@ unsigned char register_interrupt(unsigned int interrupt, void (*handler)()){
 
 void setup_idt(){
     // Initialize IDT
-    idt_ptr.address = (unsigned int) &idt_entries;
+    idt_ptr.address = (uint32_t) &idt_entries;
     idt_ptr.size = sizeof(struct idt_entry) * 256 - 1;
 
     // Load IDT through assembly and ensure the IDT was properly loaded

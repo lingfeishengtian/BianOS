@@ -12,12 +12,12 @@ void keyboard_interrupt(){
     printd(str);
 }
 
-unsigned char read_scan_code(void){
+uint8_t read_scan_code(void){
     return port_byte_in(KBD_DATA_PORT);
 }
 
-unsigned char keyboard_scan_code_to_ascii(unsigned char scan_code){
-	unsigned char ascii[256] =
+uint8_t keyboard_scan_code_to_ascii(uint8_t scan_code){
+	uint8_t ascii[256] =
 	{
 		0x0, 0x0, '1', '2', '3', '4', '5', '6',	
 		'7', '8', '9', '0', '-', '=', 0x0, 0x0,	

@@ -13,8 +13,8 @@
  * The address of where the whole IDT table starts
  */
 struct idt{
-    unsigned short size;
-    unsigned int address;
+    uint16_t size;
+    uint32_t address;
 } __attribute__ ((packed));
 
 /** idt_entry:
@@ -40,11 +40,11 @@ struct idt{
  * The upper 16 bits of the 32 bit address of the interrupt handler.
  */
 struct idt_entry{
-    unsigned short entry_address_low;
-    unsigned short selector;
-    unsigned char zero;
-    unsigned char type_attr;
-    unsigned short entry_address_high;
+    uint16_t entry_address_low;
+    uint16_t selector;
+    uint8_t zero;
+    uint8_t type_attr;
+    uint16_t entry_address_high;
 } __attribute__ ((packed));
 
 /** setup_idt:
@@ -59,4 +59,4 @@ void setup_idt();
  * @param handler A function pointer to a handler
  * @return Returns 0 for success and 1 if the interrupt is taken or handler wasn't defined in the kernel.
  */
-unsigned char register_interrupt(unsigned int interrupt, void (*handler)());
+uint8_t register_interrupt(uint32_t interrupt, void (*handler)());

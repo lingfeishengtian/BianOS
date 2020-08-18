@@ -1,3 +1,6 @@
+#include <stdint.h>
+#include <stdbool.h>
+
 /* COM Ports */
 
 /* All serial COM ports are calculated relative to the first COM port
@@ -28,7 +31,7 @@
  * @param com The COM port address that should be configured.
  * @param divisor The divisor needed to calculate the baud rate.
  */
-void serial_port_configure_baud_rate(unsigned short com, unsigned short divisor);
+void serial_port_configure_baud_rate(uint16_t com, uint16_t divisor);
 
 /** serial_port_configure_line_default: 
  * Configures the line for the serial port.
@@ -41,7 +44,7 @@ void serial_port_configure_baud_rate(unsigned short com, unsigned short divisor)
  * 
  * @param com The COM port address that should be configured
  */
-void serial_port_configure_line_default(unsigned short com);
+void serial_port_configure_line_default(uint16_t com);
 
 /** is_serial_port_fifo_transmit_empty:
  * Checks to see if the fifth bit of the serial port status is 1 or 0.
@@ -51,7 +54,7 @@ void serial_port_configure_line_default(unsigned short com);
  * @return 0 if the the transmit is not empty
  *         !0 if the transmit is empty
  */
-int is_serial_port_fifo_trasmit_empty(unsigned short com);
+bool is_serial_port_fifo_trasmit_empty(uint16_t com);
 
 /** serial_write_char:
  * Checks the status of the output port and ensures the character being written is
@@ -60,7 +63,7 @@ int is_serial_port_fifo_trasmit_empty(unsigned short com);
  * @param com The COM port address
  * @param c The character to be written
  */
-void serial_write_char(unsigned short com, unsigned char c);
+void serial_write_char(uint16_t com, uint8_t c);
 
 /** init_serial_port_default:
  * Initialize the baud rate with a divisor of 3 and configure the current COM port
@@ -68,7 +71,7 @@ void serial_write_char(unsigned short com, unsigned char c);
  * 
  * @param com The COM port address
  */
-void init_serial_port_default(unsigned short com);
+void init_serial_port_default(uint16_t com);
 
 /** serial_write:
  * Write the specified string to the specified COM port address.
@@ -76,7 +79,7 @@ void init_serial_port_default(unsigned short com);
  * @param com The COM port address
  * @param str The string to be written.
  */
-void serial_write(unsigned short com, char* str);
+void serial_write(uint16_t com, char* str);
 
 /** serial_writeln:
  * Writes the specified string to the specified COM port address with an additional new line
@@ -85,4 +88,4 @@ void serial_write(unsigned short com, char* str);
  * @param com The COM port address
  * @param str The string to be written
  */
-void serial_writeln(unsigned short com, char* str);
+void serial_writeln(uint16_t com, char* str);
