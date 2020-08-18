@@ -3,7 +3,7 @@
 
 char* hex_to_ascii(unsigned int hex){
     unsigned char size = sizeof(hex) * 2;
-    char* res = (char*) kmalloc(size + 3); //32 bit -> 8 hex pairs + 0x and null end
+    char* res = kmalloc(size + 3); //32 bit -> 8 hex pairs + 0x and null end
 
     for(int i = size - 1; i >= 0; --i){
         unsigned char ascii_val = hex & 0xF;
