@@ -4,20 +4,9 @@
 #include "gdt/gdt.h"
 #include "idt/idt.h"
 #include "../grub_headers/multiboot.h"
-#include "utils/conversion.h"
+#include "../utils/conversion.h"
 #include "mem/kheap.h"
-
-// // Testing scrolling
-// void test(){
-// 	printd("TEST\nttt");
-// 	printd("oof\n");
-// 	for(int i = 0; i < 30; ++i){
-// 		char* str = "ftkynormpgsyghwljsksjtccpbdjasokwkfzjivmnklxhedmjtixywuwtfvvwpplhkmjssyrhmrgseab"; 
-// 		str[0] = i + 48;
-// 		str[79] = i + 49;
-// 		printd(str);
-// 	}
-// }
+#include "error/error_handler.h"
 
 /** kmain:
  * Initializes the GDT, IDT, and serial debugging.
@@ -26,6 +15,7 @@ int kmain(){
 	clr_screen();
 	printd("Welcome to BianOS. CURSOR is enabled by default.\n");
 
+	initialize_serial_debugging();
 	debug_writeln("Serial debugging initialized.");
 	print("Serial debugging with COM1 port has been initialized.\n", GREEN, BLACK);
 
@@ -37,14 +27,14 @@ int kmain(){
 	printd("Initializing IDT...\n");
 	setup_idt();
 
-	if(register_interrupt(33, keyboard_interrupt) == 1){
+	if(register_interrupt(33, keyboard_interrupt, false) == 1){
 		printd("An error occured while trying to setup your keyboard driver!.");
 	}
-
-	printd(hex_to_ascii((uint32_t) kmalloc(20)));
-	printd("\n");
-	printd(hex_to_ascii((uint32_t) kmalloc(23)));
+	initialize_error_handling();
 	
+	char* f = (char*) 0xB0000000;
+	f[0] = 'f';
+
 	return 0;
 }
 
@@ -61,12 +51,11 @@ typedef void (*call_module_t) (void);
  * @return Return code
  */
 int module_main(uint32_t mbinfo){
-	kmain();
-	debug_writeln("Starting module code.");
 	mbinfo += 0xC0000000;
 	module_t* modules = (module_t*) (((multiboot_info_t*) mbinfo)->mods_addr + 0xC0000000); 
     uint32_t address_of_module = modules->mod_start + 0xC0000000;
 	call_module_t start_program = (call_module_t) address_of_module;
-    start_program();
+	kmain();
+  	start_program();
 	return 0;
 }

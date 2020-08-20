@@ -7,6 +7,10 @@ kernel_physical_start = . - 0xC0000000;
 SECTIONS{
 	. = 0xC0100000;		/* code starts at 1MB because before that is grub & bios */
 
+	.__mbHeader : AT( ADDR(.__mbHeader)-0xC0000000) {
+      *(.__mbHeader)
+	}
+
 	.text ALIGN (0x1000): AT(ADDR(.text)-0xC0000000)	/* align code at 4KB */
 	{
 		*(.text)

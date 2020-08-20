@@ -29,12 +29,13 @@ align 4
 kernel_stack:					;point to beginning of stack
 	resb KERNEL_STACK			;reserve space for stack
 
-section .text					;code section
+section .__mbHeader
 align 4							;grub requires aligned by 4 offsets to detect the headers
 	dd MAGIC					;load headers in
 	dd ALIGN_MODULES
 	dd CHECKSUM	
 
+section .text
 loader:							;entry point defined earlier
 	;set page directory
 	mov ecx, (TMP_PAGE_DIRECTORY - KERNEL_VBASE)

@@ -8,6 +8,8 @@ struct idt_entry idt_entries[256];
 struct idt idt_ptr;
 
 // Use idt loader and interrupt handler generated from assembly
+extern void interrupt_handler_0(void);
+extern void interrupt_handler_14(void);
 extern void interrupt_handler_33(void);
 extern int load_idt(void*); 
 
@@ -40,18 +42,23 @@ void create_idt_entry(int int_code, uint32_t entry){
      */
 }
 
-uint8_t register_interrupt(uint32_t interrupt, void (*handler)()){
+uint8_t register_interrupt(uint32_t interrupt, void (*handler)(), bool dump_cpu){
     if(idt_entries[interrupt].selector & 0x08) return 1;
     switch (interrupt)
     {
+    case 0:
+        create_idt_entry(interrupt, (uint32_t) interrupt_handler_0);
+        break;
+    case 14:
+        create_idt_entry(interrupt, (uint32_t) interrupt_handler_14);
+        break;
     case 33:
         create_idt_entry(interrupt, (uint32_t) interrupt_handler_33);
         break;
-    
     default:
         return 1;
     }
-    register_handler(interrupt, handler);
+    register_handler(interrupt, handler, dump_cpu);
     return 0;
 }
 

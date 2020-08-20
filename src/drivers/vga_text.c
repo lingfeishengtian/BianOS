@@ -12,7 +12,7 @@
  *
  * @param t Enable or disable. 0 for disable, 1 for enable.
  */
-void cursor_toggle(uint8_t t);
+void cursor_toggle(bool t);
 
 /** cursor_move:
  *
@@ -49,8 +49,8 @@ char get_char(uint32_t loc){
 	return video_buffer[loc];
 }
 
-void cursor_toggle(uint8_t t){
-	if(t & 0x1){
+void cursor_toggle(bool t){
+	if(t){
 		port_byte_out(VGA_INDEX, CURSOR_START_REG);
 		port_byte_out(VGA_DATA, 0x0E);
 		port_byte_out(VGA_INDEX, CURSOR_END_REG);
@@ -79,7 +79,7 @@ uint16_t get_cursor_loc(){
 }
 
 void clr_screen(){
-	cursor_toggle(1);
+	cursor_toggle(true);
 
 	for(int i = 0; i < ROWS * COLS; ++i){
 		set_char(i * 2, 0, WHITE, BLACK);

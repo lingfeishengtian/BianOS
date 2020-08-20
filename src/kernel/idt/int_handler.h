@@ -1,4 +1,5 @@
 #include "pic/pic.h"
+#include <stdbool.h>
 
 /** 
  * This struct will be the state of the cpu before the interrupt is handled. The programs running the interrupt assume all the registers will be the same afterwards.
@@ -32,6 +33,7 @@ void interrupt_handler(__attribute__((unused)) struct cpu_state cpu, int interru
  * 
  * @param interrupt The interrupt code to assign
  * @param handler A function pointer to a handler
+ * @param dump_cpu Whether or not to pass the state to the handler.
  * @return Returns 0 for success and 1 if the interrupt is taken.
  */
-void register_handler(uint32_t interrupt, void (*handler)());
+void register_handler(uint32_t interrupt, void (*handler)(), bool dump_cpu);

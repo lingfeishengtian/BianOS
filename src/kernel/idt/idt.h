@@ -2,6 +2,7 @@
  * Similar to the GDT, but for interrupts.
  */
 #include "pic/pic.h"
+#include <stdbool.h>
 
 /** idt:
  * size:
@@ -59,4 +60,4 @@ void setup_idt();
  * @param handler A function pointer to a handler
  * @return Returns 0 for success and 1 if the interrupt is taken or handler wasn't defined in the kernel.
  */
-uint8_t register_interrupt(uint32_t interrupt, void (*handler)());
+uint8_t register_interrupt(uint32_t interrupt, void (*handler)(), bool dump_cpu);

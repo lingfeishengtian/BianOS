@@ -3,12 +3,12 @@
 #include "../vga_text.h"
 #include "../../kernel/idt/pic/pic.h"
 
-void keyboard_interrupt(){
+void keyboard_interrupt(int interrupt){
     // Print the typed text onto the screen
     char str[2];
     str[0] = keyboard_scan_code_to_ascii(read_scan_code());
 	str[1] = 0;
-    pic_eoi(KEYBOARD_INTERRUPT_CODE);
+    pic_eoi(interrupt);
     printd(str);
 }
 

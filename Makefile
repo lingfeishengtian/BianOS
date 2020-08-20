@@ -6,7 +6,7 @@ SOURCE = src
 
 # declare filenames before wildcarding in order to add source folder prefix
 # specifically, all the c source, header, and compiled assembly files.
-FOLDERS = * drivers/* drivers/hardware/* kernel/* kernel/gdt/* kernel/idt/* kernel/utils/* kernel/mem/* kernel/mem/paging/* kernel/idt/pic/*
+FOLDERS = * utils/* drivers/* drivers/hardware/* kernel/* kernel/gdt/* kernel/idt/* kernel/utils/* kernel/mem/* kernel/error/* kernel/mem/paging/* kernel/idt/pic/*
 FOLDERS_W_PREFIX = $(addprefix ${SOURCE}/, $(FOLDERS))
 C_FILES = $(addsuffix .c, $(FOLDERS_W_PREFIX))
 C_HEADERS = $(addsuffix .h, $(FOLDERS_W_PREFIX))

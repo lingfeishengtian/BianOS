@@ -1,7 +1,6 @@
 #include <stdint.h>
 
 #define KBD_DATA_PORT   0x60
-#define KEYBOARD_INTERRUPT_CODE 0x21
 
 /** read_scan_code:
  * Reads the scan code from the keyboard data port
@@ -21,4 +20,4 @@ uint8_t keyboard_scan_code_to_ascii(uint8_t scan_code);
 /** keyboard_interrupt:
  * The keyboard interrupt handler
  */
-void keyboard_interrupt();
+void keyboard_interrupt(int interrupt );

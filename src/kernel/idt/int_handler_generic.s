@@ -27,4 +27,6 @@ generic_handler:
     add esp, 8                      ;remove interrupt code and error code from the stack
     iretd                           ;let iret pop eflags, cs, and ip
 
+INT_HANDLER_NO_ERR_CODE 0           ;keyboard interrupt handler
+INT_HANDLER_WITH_ERR_CODE 14         ;keyboard interrupt handler
 INT_HANDLER_NO_ERR_CODE 33          ;keyboard interrupt handler
