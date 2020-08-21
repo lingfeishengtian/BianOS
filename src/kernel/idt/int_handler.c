@@ -13,7 +13,7 @@ void interrupt_handler(struct cpu_state cpu, int interrupt, struct stack_state s
     }
 }
 
-void register_handler(unsigned int interrupt, void (*handler)(), bool dump_cpu){
+void register_handler(uint32_t interrupt, void (*handler)(), bool dump_cpu){
     interrupt_handlers[interrupt] = handler;
 
     uint8_t dump = dump_cpu;

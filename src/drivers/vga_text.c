@@ -1,5 +1,8 @@
+#include <stdarg.h>
+
 #include "vga_text.h"
 #include "port_io.h"
+#include "../utils/conversion.h"
 
 // Start init of private internal functions
 
@@ -105,30 +108,79 @@ void scroll(){
 	cursor_move(cursor_pos - COLS);
 }
 
-void print(char* str, enum Colours tc, enum Colours bg){
+void check_pos_scroll(uint16_t *pos){
+	if(*pos >= COLS * ROWS * 2){
+		scroll();
+		*pos -= COLS * 2;
+	}
+}
+
+void kprintf_internal(char* str, char c, uint16_t *pos, enum Colours tc, enum Colours bg){
+	if(c){
+		check_pos_scroll(pos);
+		if(c == '\n'){
+			*pos = (*pos + COLS * 2) - (*pos % (COLS * 2));
+		} else{
+			set_char(*pos, c, tc, bg);
+			*pos += 2;
+		}
+	} else {
+		uint32_t i = 0;
+
+		while(str[i] != 0){
+			kprintf_internal(0, str[i], pos, tc, bg);
+			++i;
+		}
+	}
+}
+
+void kprintf(char* str, enum Colours tc, enum Colours bg, ...){
 	uint16_t initial_pos = get_cursor_loc() * 2;
 	uint32_t i = 0;
 
-	while(str[i] != 0){
-		if(initial_pos >= COLS * ROWS * 2){
-			scroll();
-			initial_pos -= COLS * 2;
-		}
+	va_list ap;
+	va_start(ap, bg);
 
-		if(str[i] == '\n'){
-			//TODO: Is there a better way to do this?
-			initial_pos = (initial_pos + COLS * 2) - (initial_pos % (COLS * 2));
+	while(str[i] != 0){
+		if(str[i] == '%'){
+			char arg = str[++i];
+
+			char c_arg = 0;
+			char* c_ptr_arg = 0;
+
+			switch (arg)
+			{
+			case 'c':
+				c_arg = (char) va_arg(ap, int);
+				break;
+			case 's':
+				c_ptr_arg = va_arg(ap, char*);
+				break;
+			case 'x':
+				c_ptr_arg = hex_to_ascii(va_arg(ap, int));
+				break;
+			case 'd':
+				c_ptr_arg = int_to_ascii(va_arg(ap, int));
+				break;
+			case '%':
+				c_arg = '%';
+				break;
+			default:
+				break;
+			}
+
+			kprintf_internal(c_ptr_arg, c_arg, &initial_pos, tc, bg);
 		}else{
-			set_char(initial_pos, str[i], tc, bg);
-			initial_pos += 2;
+			kprintf_internal(0, str[i], &initial_pos, tc, bg);
 		}
 
 		i++;
 	}
 
+	va_end(ap);
 	cursor_move(initial_pos / 2);
 }
 
-void printd(char* str){
-	print(str, LIGHT_GREY, BLACK);
+void kprint_str(char* str){
+	kprintf(str, LIGHT_GREY, BLACK);
 }

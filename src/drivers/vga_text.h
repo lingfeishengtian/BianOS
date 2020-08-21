@@ -53,7 +53,7 @@ void set_char(uint32_t i, char c, enum Colours tc, enum Colours bg);
  */
 char get_char(uint32_t loc);
 
-/** print:
+/** kprintf:
  * Print a string to the screen and moves the cursor to the location right after the printed string.
  *
  * If the string overflows, then the screen will scroll.
@@ -61,16 +61,23 @@ char get_char(uint32_t loc);
  * @param str The string to be printed
  * @param tc The text color
  * @param bg The background color
+ * 
+ * If kprintf recieves % while looping the string and a character after that percent sign, then more arguments are required to fill in
+ * the specified value to print.
+ * %c: Character
+ * %x: Unsigned Hexadecimal
+ * %i: Integer
+ * %u: Unsigned integer
+ * %s: String
  */
-void print(char* str, enum Colours tc, enum Colours bg);
+void kprintf(char* str, enum Colours tc, enum Colours bg, ...);
 
-//TODO: USE __VA_ARGS__ to create something similar to printf
-/** printd:
+/** print_str:
  * Same thing as the function above exept with default colors: text color is light grey, background color is black.
  *
  * @param str The string to be printed
  */
-void printd(char* str);
+void kprint_str(char* str);
 
 /** clr_screen:
  * Clears the screen of everything.

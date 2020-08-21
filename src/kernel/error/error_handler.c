@@ -7,7 +7,8 @@
 #include "../../utils/string.h"
 
 void error_handler(int interrupt, __attribute__ ((unused)) struct cpu_state cpu, __attribute__ ((unused)) struct stack_state stack){
-    char* error_msg;
+    char* error_msg = "";
+    kprintf("[KERNEL PANIC] ", RED, BLACK);
 
     switch (interrupt)
     {
@@ -16,7 +17,7 @@ void error_handler(int interrupt, __attribute__ ((unused)) struct cpu_state cpu,
         break;
     
     case 14:
-        error_msg = concat("Page fault occurred\nPAGE DUMP\nError Code: ", hex_to_ascii(stack.error_code));
+        kprintf("Page fault occurred\nPAGE DUMP\nError Code: %x", RED, BLACK, stack.error_code);
         break;
 
     default:
@@ -24,13 +25,11 @@ void error_handler(int interrupt, __attribute__ ((unused)) struct cpu_state cpu,
         break;
     }
 
-    panic(error_msg);
+    kprintf(error_msg, RED, BLACK);
+    panic();
 }
 
-void panic(char* reason){
-    print("[KERNEL PANIC] ", RED, BLACK);
-    print(reason, RED, BLACK);
-
+void panic(){
     while (true)
     {
         asm volatile ("cli");

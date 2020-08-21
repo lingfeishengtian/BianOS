@@ -9,7 +9,7 @@ void keyboard_interrupt(int interrupt){
     str[0] = keyboard_scan_code_to_ascii(read_scan_code());
 	str[1] = 0;
     pic_eoi(interrupt);
-    printd(str);
+    kprint_str(str);
 }
 
 uint8_t read_scan_code(void){

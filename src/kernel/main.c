@@ -13,22 +13,22 @@
  */
 int kmain(){
 	clr_screen();
-	printd("Welcome to BianOS. CURSOR is enabled by default.\n");
+	kprint_str("Welcome to BianOS. CURSOR is enabled by default.\n");
 
 	initialize_serial_debugging();
 	debug_writeln("Serial debugging initialized.");
-	print("Serial debugging with COM1 port has been initialized.\n", GREEN, BLACK);
+	kprintf("Serial debugging with COM1 port has been initialized.\n", GREEN, BLACK);
 
-	printd("Initializing GDT...\n");
+	kprint_str("Initializing GDT...\n");
 	debug_writeln("Starting GDT init process.");
 	setup_gdt();
 	debug_writeln("Completed GDT init process.");
 
-	printd("Initializing IDT...\n");
+	kprint_str("Initializing IDT...\n");
 	setup_idt();
 
 	if(register_interrupt(33, keyboard_interrupt, false) == 1){
-		printd("An error occured while trying to setup your keyboard driver!.");
+		kprint_str("An error occured while trying to setup your keyboard driver!.");
 	}
 	initialize_error_handling();
 	

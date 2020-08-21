@@ -37,8 +37,8 @@ ISO_MAKER = $(if $(is_darwin), mkisofs, genisoimage)
 # a BUNCH of flags required in order for our compiled files to not have unnecessary extra code
 # ALSO treat all warnings as errors
 # also build with i386 (x32)
-CFLAGS = -m32 -nostdlib -fno-builtin -fno-stack-protector \
-             -nostartfiles -nodefaultlibs -Wall -Wextra -Werror -c
+CFLAGS = -m32 -nostdlib -ffreestanding -fno-stack-protector \
+             -Wall -Wextra -Werror -c
 LD_FLAGS = -T link.ld -melf_i386
 
 # default: build the iso file
