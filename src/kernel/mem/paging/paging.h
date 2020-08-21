@@ -15,3 +15,10 @@ typedef struct page_table
 {
     page_t pages[1024];
 } page_table_t;
+
+typedef struct page_directory
+{
+    page_table_t * page_tables[1024];
+    uint32_t page_table_physical[1024];
+    uint32_t physical_addr;
+} page_directory_t;
