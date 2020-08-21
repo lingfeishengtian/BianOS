@@ -11,8 +11,6 @@ A simple OS(if you even count it as an OS) to test out os dev.
 Building BianOS is fairly simple, setup your dependencies and execute a single command.
 
 ## Dependencies
-I do not condone building this OS on Windows or any other non-UNIX based OS system.
-Building on Windows is a pain and from personal experience doesn't work well.
 
 **Required**
 - gcc: building and compiling c files
@@ -45,6 +43,9 @@ Then run the following commands to install nasm, mkisofs, and qemu.
 ```shell
 brew install nasm cdrtools qemu
 ```
+
+## Windows
+Compiling on Windows is possible but must be done in WSL. In addition, the ISO cannot be automatically run from ```make run``` and must be run from a virtual machine software such as VirtualBox.
 
 ## Make
 Assuming you understand how to use basic terminal commands, cd into the root directory and just run ```make``` which should create an os.iso file in the root directory and also a build folder.
