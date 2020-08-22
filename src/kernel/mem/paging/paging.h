@@ -22,3 +22,7 @@ typedef struct page_directory
     uint32_t page_table_physical[1024];
     uint32_t physical_addr;
 } page_directory_t;
+
+extern void kernel_physical_start(void);
+void* kernel_phys_placement = &kernel_physical_start;
+

@@ -32,8 +32,8 @@ int kmain(){
 	}
 	initialize_error_handling();
 	
-	char* f = (char*) 0xB0000000;
-	f[0] = 'f';
+	// char* f = (char*) 0xB0000000;
+	// f[0] = 'f';
 
 	return 0;
 }
