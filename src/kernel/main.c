@@ -52,11 +52,12 @@ typedef void (*call_module_t) (void);
 int module_main(multiboot_info_t* mbinfo){
 	kmain(); 
 	module_t* modules = (module_t*) ((mbinfo)->mods_addr);
-    uint32_t address_of_module = modules->mod_start + 0xC0000000;
-	kprintf("Adress: %x", RED, BLACK, address_of_module);
+    uint32_t address_of_module = (uint32_t) modules;
+	kprintf("Adress: %x\nMods Count: %d", RED, BLACK, address_of_module, mbinfo->mods_count);
+	//panic();
 	
 	call_module_t start_program = (call_module_t) address_of_module;
-	panic();
+	
   	start_program();
 	return 0;
 }
