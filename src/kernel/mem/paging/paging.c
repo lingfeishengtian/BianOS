@@ -11,8 +11,6 @@ uint32_t nframes;
 #define INDEX_OF_FRAME(x) x / 32
 #define OFFSET_OF_FRAME(x) x % 32
 
-extern void disable_pse_and_paging(void);
-extern void enable_paging(void);
 extern void switch_page_directory(uint32_t);
 
 void set_frame(uint32_t frame_addr){
@@ -53,14 +51,14 @@ uint32_t alloca_frame(page_t * page, bool is_kernel, bool is_writeable){
     if(page->frame != 0){
         return 0;
     }else{
-        uint32_t free_frame = find_first_free_frame() * 0x1000;
+        uint32_t free_frame = find_first_free_frame();
         
-        if(free_frame == sizeof(uint32_t) - 1){
+        if(free_frame * 0x10000 == sizeof(uint32_t) - 1){
             kprintf("[KERNEL PANIC] No free frames!", RED, BLACK);
             panic();
         }
 
-        set_frame(free_frame);
+        set_frame(free_frame * 0x1000);
         page->frame = free_frame;
         page->present = 1;
         page->rw = is_writeable;
@@ -75,7 +73,7 @@ void free_frame(page_t * page)
     if(!frame){
         return;
     }else{
-        clear_frame(frame);
+        clear_frame(frame * 0x1000);
         page->frame = 0x0;
     }
 }
@@ -97,9 +95,13 @@ page_t * create_page(uint32_t addr, page_directory_t * dir){
     }
 }
 
+page_directory_t * cur_dir;
+
+void alloca_page_addr(uint32_t addr){
+    alloca_frame(create_page(addr, cur_dir), true, true);
+}
+
 void init_paging(){
-    asm volatile ("mov 0xdeadc0de, %eax");
-    asm volatile ("hlt");
     //TODO: Actually check the memory size! Currently 128 MiB for QEMU size
     uint32_t mem_size = 0x8000000;
     nframes = mem_size / 0x1000;
@@ -108,27 +110,27 @@ void init_paging(){
 
     page_directory_t * pg_dir = kmalloc_a(sizeof(page_directory_t));
     memset(pg_dir, 0, sizeof(page_directory_t));
+    cur_dir = pg_dir;
 
-    kprint_str("Starting identity map of addresses all to final used memory value.");
+    kprint_str("Starting identity map of addresses all to final used memory value.\n");
     uint32_t i = 0;
-    while (i < 0x100000)
+    while (i < 0x200000)
     {
-        kprintf("%x\n", GREEN, BLACK, i);
         alloca_frame(create_page(i, pg_dir), true, true);
         i += 0x1000;
     }
 
     i = virt_start;
-    while (i < (uint32_t) placement_addr)
+    while (i <= (uint32_t) placement_addr)
     {
-        kprintf("%x\n", GREEN, BLACK, i);
-        alloca_frame(create_page(i, pg_dir), true, true);
+        page_t* tmp = create_page(i, pg_dir);
+        tmp->frame = (i - 0xC0000000) >> 12;
+        tmp->present = 1;
+        tmp->rw = 1;
+        tmp->user = 1;
         i += 0x1000;
     }
 
-    kprint_str("Changing page directory.");
-    disable_pse_and_paging();
-    debug_writeln("test");
-    switch_page_directory((uint32_t) pg_dir->page_table_physical - virt_start);
-    enable_paging();
+    kprint_str("Changing page directory.\n");
+    switch_page_directory((uint32_t) pg_dir->page_table_physical);
 }

@@ -3,7 +3,7 @@ bits 32
 
 section .text
 start:
-mov [0xC00B8000], BYTE 0x41 ;module writes A to the first value of framebuffer
+mov eax, 0xDEADC0DE
 
 ; enter infinite loop
 jmp $

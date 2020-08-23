@@ -38,8 +38,14 @@ align 4							;grub requires aligned by 4 offsets to detect the headers
 	dd ALIGN_MODULES
 	dd CHECKSUM	
 
+section .data
+multiboot_info:
+	dd 0
+
 section .text
 loader:							;entry point defined earlier
+	mov [multiboot_info - KERNEL_VBASE], ebx
+
 	mov ecx, bss_size
 	xor al, al
 	mov edi, bss_start 
@@ -59,7 +65,7 @@ loader:							;entry point defined earlier
 	or dword [lowmem_pt+ecx*4], 3 ; write our permissions (present, etc)
 
 	add eax, 0x1000 ; move on to the next page
-	cmp eax, kernel_physical_end ; are we done with lowmem? 
+	cmp eax, 0x0010F000 ; are we done with lowmem? 
 	jl .lowmem
 
 	; create virtual mappings for the kernel in the higher-half
@@ -82,7 +88,7 @@ loader:							;entry point defined earlier
 	or dword [kernel_pt+ecx*4], 3
 
 	add eax, 0x1000    ; move on to the next page
-	cmp eax, kernel_virtual_end  ; are we done mapping in the kernel?
+	cmp eax, (kernel_virtual_end + 0x0010000) ; are we done mapping in the kernel?
 	jl .higher
 
 	mov eax, page_directory
@@ -90,9 +96,8 @@ loader:							;entry point defined earlier
 
 	mov eax, cr0
 	or eax, PG_BIT
-	hlt
 	mov cr0, eax ; enable paging! make sure the next instruction fetch doesnt page fault
-
+	
 	;far jump to avoid reference relative jump
 	lea ecx, [higher_kernel_entry]
 	jmp ecx
@@ -100,8 +105,7 @@ loader:							;entry point defined earlier
 higher_kernel_entry:
 	mov esp, kernel_stack + KERNEL_STACK	;setup stack for programming in c: point stack to top (stack grows downward)
 
-	add esp, 4
-	push ebx
+	push dword [multiboot_info]
 
 	call module_main						;call module_main
 

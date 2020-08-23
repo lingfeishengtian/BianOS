@@ -22,7 +22,7 @@ enum Colours{
 };
 
 // Useful macros to make vga_text.c more readable
-#define VIDEO_BUFFER 0xC00B8000
+#define VIDEO_BUFFER 0x000B8000
 
 #define VGA_INDEX 0x03D4
 #define VGA_DATA 0x03D5

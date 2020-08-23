@@ -23,4 +23,5 @@ typedef struct page_directory
     uint32_t page_table_physical[1024];
 } page_directory_t;
 
+void alloca_page_addr(uint32_t addr);
 void init_paging();
