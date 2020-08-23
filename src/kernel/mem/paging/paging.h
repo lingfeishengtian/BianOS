@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include <stdint.h>
 
 typedef struct page
@@ -20,9 +21,6 @@ typedef struct page_directory
 {
     page_table_t * page_tables[1024];
     uint32_t page_table_physical[1024];
-    uint32_t physical_addr;
 } page_directory_t;
 
-extern void kernel_physical_start(void);
-void* kernel_phys_placement = &kernel_physical_start;
-
+void init_paging();

@@ -1,15 +1,24 @@
 ENTRY(loader)			/* name of our entry point */
 
  /* these labels get exported to the code files */
-kernel_virtual_start = .;
-kernel_physical_start = . - 0xC0000000;
 
 SECTIONS{
-	. = 0xC0100000;		/* code starts at 1MB because before that is grub & bios */
+	. = 0x00100000;
 
-	.__mbHeader : AT( ADDR(.__mbHeader)-0xC0000000) {
-      *(.__mbHeader)
+	.__mbHeader : { *(.__mbHeader) }
+	.pg_bss ALIGN (0x1000):
+	{
+		bss_start = .;
+		*(.pg_bss)
+		bss_end = .;
 	}
+
+	bss_size = bss_end - bss_start;
+	
+	. += 0xC0000000;		/* code starts at 1MB because before that is grub & bios */
+
+	kernel_virtual_start = .;
+	kernel_physical_start = . - 0xC0000000;
 
 	.text ALIGN (0x1000): AT(ADDR(.text)-0xC0000000)	/* align code at 4KB */
 	{
@@ -31,7 +40,7 @@ SECTIONS{
 		*(COMMON)	/* eventually all initialized and uninitialized c variables will end up in the same place */
 		*(.bss)
 	}
-}
 
-kernel_virtual_end = .;
-kernel_physical_end = . - 0xC0000000;
+	kernel_virtual_end = .;
+	kernel_physical_end = . - 0xC0000000;
+}

@@ -7,6 +7,7 @@
 #include "../utils/conversion.h"
 #include "mem/kheap.h"
 #include "error/error_handler.h"
+#include "mem/paging/paging.h"
 
 /** kmain:
  * Initializes the GDT, IDT, and serial debugging.
@@ -31,9 +32,11 @@ int kmain(){
 		kprint_str("An error occured while trying to setup your keyboard driver!.");
 	}
 	initialize_error_handling();
+
+	kprint_str("aftr paing");
 	
-	// char* f = (char*) 0xB0000000;
-	// f[0] = 'f';
+	char* f = (char*) 0xC00B8000;
+	f[0] = 'f';
 
 	return 0;
 }
@@ -54,7 +57,7 @@ int module_main(uint32_t mbinfo){
 	mbinfo += 0xC0000000;
 	module_t* modules = (module_t*) (((multiboot_info_t*) mbinfo)->mods_addr + 0xC0000000); 
     uint32_t address_of_module = modules->mod_start + 0xC0000000;
-	call_module_t start_program = (call_module_t) address_of_module;
+	call_module_t __attribute__ ((unused)) start_program = (call_module_t) address_of_module;
 	kmain();
   	start_program();
 	return 0;
