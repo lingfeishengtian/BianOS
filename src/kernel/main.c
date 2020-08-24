@@ -50,14 +50,14 @@ typedef void (*call_module_t) (void);
  * @return Return code
  */
 int module_main(multiboot_info_t* mbinfo){
-	kmain(); 
 	module_t* modules = (module_t*) ((mbinfo)->mods_addr);
-    uint32_t address_of_module = (uint32_t) modules;
-	kprintf("Adress: %x\nMods Count: %d", RED, BLACK, address_of_module, mbinfo->mods_count);
-	//panic();
+    uint32_t address_of_module = (uint32_t) modules->mod_start + 0xC0000000;
+	placement_addr = (void *) modules->mod_end + 0xC0000000;
+
+	kmain();
 	
+	kprintf("Address: %x\nMods Count: %d\n", RED, BLACK, address_of_module, mbinfo->mods_count);
 	call_module_t start_program = (call_module_t) address_of_module;
-	
   	start_program();
 	return 0;
 }

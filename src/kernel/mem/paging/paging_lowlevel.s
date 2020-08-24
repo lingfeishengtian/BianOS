@@ -1,4 +1,5 @@
 global switch_page_directory
+extern kprint_str
 section .text
 switch_page_directory:
     push ecx

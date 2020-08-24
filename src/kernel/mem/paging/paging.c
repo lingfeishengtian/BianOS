@@ -53,7 +53,7 @@ uint32_t alloca_frame(page_t * page, bool is_kernel, bool is_writeable){
     }else{
         uint32_t free_frame = find_first_free_frame();
         
-        if(free_frame * 0x10000 == sizeof(uint32_t) - 1){
+        if(free_frame * 0x1000 == sizeof(uint32_t) - 1){
             kprintf("[KERNEL PANIC] No free frames!", RED, BLACK);
             panic();
         }
@@ -90,6 +90,7 @@ page_t * create_page(uint32_t addr, page_directory_t * dir){
         page_table_t* virt = kmalloc_a(sizeof(page_table_t));
         memset(virt, 0, 0x1000);
         dir->page_table_physical[table_ind] = ((uint32_t) virt - virt_start) | 0x7;
+        kprintf("%x\n", GREEN, BLACK, dir->page_table_physical[table_ind]);
         dir->page_tables[table_ind] = virt;
         return &dir->page_tables[table_ind]->pages[addr % 1024];
     }
@@ -114,7 +115,7 @@ void init_paging(){
 
     kprint_str("Starting identity map of addresses all to final used memory value.\n");
     uint32_t i = 0;
-    while (i < 0x200000)
+    while (i < 0x00100000)
     {
         alloca_frame(create_page(i, pg_dir), true, true);
         i += 0x1000;
@@ -131,6 +132,6 @@ void init_paging(){
         i += 0x1000;
     }
 
-    kprint_str("Changing page directory.\n");
+    kprintf("Changing page directory.\nAddress of page directory: %x\n", MAGENTA, BLACK, cur_dir->page_table_physical);
     switch_page_directory((uint32_t) pg_dir->page_table_physical);
 }
