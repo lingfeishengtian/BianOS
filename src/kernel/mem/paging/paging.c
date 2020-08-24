@@ -90,7 +90,6 @@ page_t * create_page(uint32_t addr, page_directory_t * dir){
         page_table_t* virt = kmalloc_a(sizeof(page_table_t));
         memset(virt, 0, 0x1000);
         dir->page_table_physical[table_ind] = ((uint32_t) virt - virt_start) | 0x7;
-        kprintf("%x\n", GREEN, BLACK, dir->page_table_physical[table_ind]);
         dir->page_tables[table_ind] = virt;
         return &dir->page_tables[table_ind]->pages[addr % 1024];
     }
