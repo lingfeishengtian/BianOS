@@ -52,17 +52,23 @@ int module_main(multiboot_info_t* mbinfo){
 	clr_screen();
 	module_t* modules = (module_t*) ((mbinfo)->mods_addr);
     uint32_t address_of_module = (uint32_t) modules->mod_start + 0xC0000000;
-	placement_addr = (void *) modules->mod_end + 0xC0000000;
+	kernel_placement_addr = (void *) modules->mod_end + 0xC0000000;
 
 	kprintf("Address: %x\nMods Count: %d\nMoving kernel heap to %x!\n",
 	 		RED,
 			BLACK,
 			address_of_module,
 			mbinfo->mods_count,
-			placement_addr);
+			kernel_placement_addr);
 	kmain();
-	
+
 	call_module_t start_program = (call_module_t) address_of_module;
+
+	char* test = malloc(32);
+	char* test1 = malloc(32);
+	kprintf("%x\n%x", RED, BLACK, test, test1);
+
   	start_program();
+	
 	return 0;
 }

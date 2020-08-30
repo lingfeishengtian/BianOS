@@ -75,7 +75,7 @@ loader:							;entry point defined earlier
 	mov [page_directory+edx*4], eax					;page dir[768] = kernel_pt
 	or dword [page_directory+edx*4], 3 				;mark the PT as present
 
-	mov eax, kernel_virtual_start 					;the kernel's current virtual start
+	mov eax, KERNEL_VBASE 							;the kernel's current virtual start
 	.higher:										;same process as lower memory
 	mov ecx, eax
 	shr ecx, 12
@@ -87,7 +87,7 @@ loader:							;entry point defined earlier
 	or dword [kernel_pt+ecx*4], 3
 
 	add eax, 0x1000    
-	cmp eax, (kernel_virtual_end + 0x0010000) 		;finished??????
+	cmp eax, (kernel_virtual_end + 0x000C0000) 		;finished??????
 	jl .higher
 
 	mov eax, page_directory

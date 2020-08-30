@@ -95,6 +95,7 @@ page_t * create_page(uint32_t addr, page_directory_t * dir){
     }
 }
 
+bool paging_initialized = false;
 page_directory_t * cur_dir;
 
 void alloca_page_addr(uint32_t addr){
@@ -114,23 +115,21 @@ void init_paging(){
 
     kprint_str("Starting identity map of addresses all to final used memory value.\n");
     uint32_t i = 0;
-    while (i < 0x00100000)
-    {
-        alloca_frame(create_page(i, pg_dir), true, true);
-        i += 0x1000;
-    }
 
     i = virt_start;
-    while (i <= (uint32_t) placement_addr)
+    while (i <= (uint32_t) kernel_placement_addr)
     {
         page_t* tmp = create_page(i, pg_dir);
         tmp->frame = (i - 0xC0000000) >> 12;
         tmp->present = 1;
         tmp->rw = 1;
         tmp->user = 1;
+        set_frame(i);
         i += 0x1000;
     }
 
     kprintf("Changing page directory.\nAddress of page directory: %x\n", MAGENTA, BLACK, cur_dir->page_table_physical);
     switch_page_directory((uint32_t) pg_dir->page_table_physical);
+    paging_initialized = true;
+    return;
 }

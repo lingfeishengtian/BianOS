@@ -1,6 +1,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+extern bool paging_initialized;
+
 typedef struct page
 {
     uint32_t present    : 1;
