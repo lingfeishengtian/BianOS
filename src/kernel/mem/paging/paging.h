@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <stdint.h>
+#include "../kheap.h"
 
 extern bool paging_initialized;
 
@@ -16,13 +17,13 @@ typedef struct page
 
 typedef struct page_table
 {
-    page_t pages[1024];
+    page_t pages[PAGE_TABLE_COUNT];
 } page_table_t;
 
 typedef struct page_directory
 {
-    page_table_t * page_tables[1024];
-    uint32_t page_table_physical[1024];
+    page_table_t * page_tables[PAGE_TABLE_COUNT];
+    uint32_t page_table_physical[PAGE_TABLE_COUNT];
 } page_directory_t;
 
 void alloca_page_addr(uint32_t addr);

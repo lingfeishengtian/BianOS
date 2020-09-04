@@ -9,12 +9,15 @@ void kernel_physical_end(void);
 void* kernel_placement_addr = &kernel_virtual_end;
 void* phys_placement_addr = 0;
 
+#define ALIGN_CMP_ADDRESS 0x00000FFF
+#define ALIGN_ADDRESS 0xFFFFF000
+
 void* kmalloc_internal(uint32_t size, uint8_t align, void** placement_addr_pt){
     void* placement_addr = *placement_addr_pt;
     uint32_t integral_addr = (uint32_t) placement_addr;
-    if((align & 0x1) && (integral_addr & 0x00000FFF)){
-        placement_addr = (void*) (integral_addr & 0xFFFFF000);
-        placement_addr += 0x00001000;
+    if((align & 0x1) && (integral_addr & ALIGN_CMP_ADDRESS)){
+        placement_addr = (void*) (integral_addr & ALIGN_ADDRESS);
+        placement_addr += PAGE_SIZE;
     }
     
     void* tmp = placement_addr;
@@ -26,7 +29,7 @@ void* kmalloc_internal(uint32_t size, uint8_t align, void** placement_addr_pt){
         uint32_t tmp_ret = (uint32_t) tmp;
         while(tmp_ret <= (uint32_t) placement_addr){
             alloca_page_addr((uint32_t) tmp_ret);
-            tmp_ret += 0x1000;
+            tmp_ret += PAGE_SIZE;
         }
     }
 
