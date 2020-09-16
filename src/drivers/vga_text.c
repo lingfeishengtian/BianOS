@@ -115,12 +115,22 @@ void check_pos_scroll(uint16_t *pos){
 	}
 }
 
-void kprintf_internal(char* str, char c, uint16_t *pos, enum Colours tc, enum Colours bg){
-	if(c){
+void kdelete(){
+	uint16_t initial_pos = get_cursor_loc() * 2;
+	if(get_char(initial_pos - 1) == WHITE){
+		set_char(initial_pos - 2, 0, WHITE, BLACK);
+		cursor_move((initial_pos - 2) / 2);
+	}
+}
+
+void kprintf_internal(char* str, char c, uint16_t *pos, enum Colours tc, enum Colours bg, uint8_t typ){
+	if(typ){
 		check_pos_scroll(pos);
 		if(c == '\n'){
 			*pos = (*pos + COLS * 2) - (*pos % (COLS * 2));
-		} else{
+		} else if(c == 0){
+			return;
+		} else {
 			set_char(*pos, c, tc, bg);
 			*pos += 2;
 		}
@@ -128,7 +138,7 @@ void kprintf_internal(char* str, char c, uint16_t *pos, enum Colours tc, enum Co
 		uint32_t i = 0;
 
 		while(str[i] != 0){
-			kprintf_internal(0, str[i], pos, tc, bg);
+			kprintf_internal(0, str[i], pos, tc, bg, 1);
 			++i;
 		}
 	}
@@ -148,6 +158,8 @@ void kprintf(char* str, enum Colours tc, enum Colours bg, ...){
 			char c_arg = 0;
 			char* c_ptr_arg = 0;
 
+			uint8_t typ = 1;
+
 			switch (arg)
 			{
 			case 'c':
@@ -155,12 +167,15 @@ void kprintf(char* str, enum Colours tc, enum Colours bg, ...){
 				break;
 			case 's':
 				c_ptr_arg = va_arg(ap, char*);
+				typ = 0;
 				break;
 			case 'x':
 				c_ptr_arg = hex_to_ascii(va_arg(ap, int));
+				typ = 0;
 				break;
 			case 'd':
 				c_ptr_arg = int_to_ascii(va_arg(ap, int));
+				typ = 0;
 				break;
 			case '%':
 				c_arg = '%';
@@ -169,9 +184,9 @@ void kprintf(char* str, enum Colours tc, enum Colours bg, ...){
 				break;
 			}
 
-			kprintf_internal(c_ptr_arg, c_arg, &initial_pos, tc, bg);
+			kprintf_internal(c_ptr_arg, c_arg, &initial_pos, tc, bg, typ);
 		}else{
-			kprintf_internal(0, str[i], &initial_pos, tc, bg);
+			kprintf_internal(0, str[i], &initial_pos, tc, bg, 1);
 		}
 
 		i++;

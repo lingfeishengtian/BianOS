@@ -1,6 +1,12 @@
 #include <stdint.h>
+#include <stdbool.h>
 
 #define KBD_DATA_PORT   0x60
+#define L_SHIFT_KEY_DOWN         0x2A
+#define R_SHIFT_KEY_DOWN         0x36
+#define L_SHIFT_KEY_UP           (L_SHIFT_KEY_DOWN + 0x80)
+#define R_SHIFT_KEY_UP           (R_SHIFT_KEY_DOWN + 0x80)
+#define DELETE                   0x0E
 
 /** read_scan_code:
  * Reads the scan code from the keyboard data port

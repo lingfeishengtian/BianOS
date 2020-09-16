@@ -83,3 +83,5 @@ void kprint_str(char* str);
  * Clears the screen of everything.
  */
 void clr_screen();
+
+void kdelete();
