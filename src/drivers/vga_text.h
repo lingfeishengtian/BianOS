@@ -84,4 +84,10 @@ void kprint_str(char* str);
  */
 void clr_screen();
 
+/** kdelete:
+ * Deletes the character before the current position.
+ * The character before the current position must have white text in order to be able to be considered
+ * a user entered piece of text and therefore "deleteable". Otherwise, the text is considered "supervisor" text
+ * and will not be deleted.
+ */
 void kdelete();
