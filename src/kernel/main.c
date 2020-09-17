@@ -64,12 +64,7 @@ int module_main(multiboot_info_t* mbinfo){
 
 	call_module_t start_program = (call_module_t) address_of_module;
 
-	char* test = malloc(32);
-	char* test1 = malloc(32);
-
-	kprintf("%x\n%x", RED, BLACK, test, test1);
-
-  	start_program();
+  	(start_program)();
 	
 	return 0;
 }

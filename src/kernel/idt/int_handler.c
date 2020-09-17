@@ -5,7 +5,7 @@
 void (*interrupt_handlers[256]) ();
 uint8_t should_pass_cpu[32];
 
-void interrupt_handler(struct cpu_state cpu, int interrupt, struct stack_state stack){
+void interrupt_handler(cpu_state_t cpu, int interrupt, struct stack_state stack){
     if(should_pass_cpu[interrupt / 8] >> (interrupt % 8)){
         interrupt_handlers[interrupt](interrupt, cpu, stack);
     }else{

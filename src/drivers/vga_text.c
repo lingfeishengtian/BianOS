@@ -128,6 +128,8 @@ void kprintf_internal(char* str, char c, uint16_t *pos, enum Colours tc, enum Co
 		check_pos_scroll(pos);
 		if(c == '\n'){
 			*pos = (*pos + COLS * 2) - (*pos % (COLS * 2));
+		} else if(c == '\t'){
+			kprintf_internal("  ", 0, pos, tc, bg, 0);
 		} else if(c == 0){
 			return;
 		} else {

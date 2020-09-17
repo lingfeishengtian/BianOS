@@ -5,9 +5,9 @@
  * This struct will be the state of the cpu before the interrupt is handled. The programs running the interrupt assume all the registers will be the same afterwards.
  * This struct contains the contents pushed by pusha
  */
-struct cpu_state{
+typedef struct __attribute__ ((packed)) {
     uint32_t edi, esi, ebp, esp, ebx, edx, ecx, eax;
-} __attribute__ ((packed));
+} cpu_state_t;
 
 /**
  * This struct contains the contents of the stack when the interrupt is called.
@@ -26,7 +26,7 @@ struct stack_state{
  * @param interrupt The interrupt code that was called
  * @param stack Information pushed by the cpu
  */
-void interrupt_handler(__attribute__((unused)) struct cpu_state cpu, int interrupt, __attribute__((unused)) struct stack_state stack);
+void interrupt_handler(cpu_state_t cpu, int interrupt, struct stack_state stack);
 
 /** register_handler:
  * Assign an interrupt to an interrupt handler.

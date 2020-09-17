@@ -12,6 +12,8 @@ void* phys_placement_addr = 0;
 #define ALIGN_CMP_ADDRESS 0x00000FFF
 #define ALIGN_ADDRESS 0xFFFFF000
 
+//TODO: Implement kfree()
+
 void* kmalloc_internal(uint32_t size, uint8_t align, void** placement_addr_pt){
     void* placement_addr = *placement_addr_pt;
     uint32_t integral_addr = (uint32_t) placement_addr;

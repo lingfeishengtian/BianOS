@@ -7,7 +7,7 @@ extern void gdt_flush(uint32_t);
 
 // We define our GDT now.
 struct gdt gdt_ptr;
-struct gdt_entry gdt_entries[3];
+struct gdt_entry gdt_entries[GDT_SIZE];
 
 /** internal create_gdt_entry
  * Creates a gdt entry at an index.
@@ -40,16 +40,18 @@ void create_gdt_entry(uint32_t index, uint32_t base, uint32_t limit, uint8_t acc
  * @param access Flags for the GDT to identify access
  */
 void create_gdt_entry_default_granularity(uint32_t index, uint32_t base, uint32_t limit, uint8_t access){
-    create_gdt_entry(index, base, limit, access, 0xCF);
+    create_gdt_entry(index, base, limit, access, GDT_GRANULARITY);
 }
 
 void setup_gdt(){
     gdt_ptr.offset = (int) &gdt_entries;
-    gdt_ptr.size = sizeof(struct gdt_entry) * 3 - 1;
+    gdt_ptr.size = sizeof(struct gdt_entry) * GDT_SIZE - 1;
 
     create_gdt_entry(0, 0, 0, 0, 0); // Null descriptor
-    create_gdt_entry_default_granularity(1, 0, 0xFFFFFFFF, 0x9A); // Code segment
-    create_gdt_entry_default_granularity(2, 0, 0xFFFFFFFF, 0x92); // Data segment
+    create_gdt_entry_default_granularity(1, 0, 0xFFFFFFFF, GDT_SUPER_CODE_ACCESS); // Code segment
+    create_gdt_entry_default_granularity(2, 0, 0xFFFFFFFF, GDT_SUPER_DATA_ACCESS); // Data segment
+    create_gdt_entry_default_granularity(3, 0, 0xFFFFFFFF, GDT_USER_CODE_ACCESS); // Code segment
+    create_gdt_entry_default_granularity(4, 0, 0xFFFFFFFF, GDT_USER_DATA_ACCESS); // Data segment
 
     gdt_flush((uint32_t) &gdt_ptr);
 }

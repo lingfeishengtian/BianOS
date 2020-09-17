@@ -1,5 +1,12 @@
 #include <stdint.h>
 
+#define GDT_SIZE 5
+#define GDT_GRANULARITY 0xCF
+#define GDT_SUPER_CODE_ACCESS 0x9A
+#define GDT_SUPER_DATA_ACCESS 0x92
+#define GDT_USER_CODE_ACCESS (GDT_SUPER_CODE_ACCESS | 0x40)
+#define GDT_USER_DATA_ACCESS (GDT_SUPER_DATA_ACCESS | 0x40)
+
 /** gdt:
  * Size:
  * short -> 2 bytes
