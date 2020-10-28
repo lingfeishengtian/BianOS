@@ -60,7 +60,7 @@ void error_handler(int interrupt, cpu_state_t cpu, struct stack_state stack){
         else
             kprint_str("non-present page entry.");
 
-        kprintf("\nError occurred at address: %x", 
+        kprintf("\nError occurred at address: %x\n", 
                 LIGHT_GREY, 
                 BLACK,
                 bad_address);

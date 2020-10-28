@@ -6,20 +6,24 @@ SOURCE = src
 
 # declare filenames before wildcarding in order to add source folder prefix
 # specifically, all the c source, header, and compiled assembly files.
-FOLDERS = * utils/* drivers/* drivers/hardware/* kernel/* kernel/gdt/* kernel/idt/* kernel/utils/* kernel/mem/* kernel/error/* kernel/mem/paging/* kernel/idt/pic/*
+FOLDERS = * iso/modules/* utils/* drivers/* drivers/hardware/* kernel/* kernel/gdt/* kernel/idt/* kernel/utils/* kernel/mem/* kernel/error/* kernel/mem/paging/* kernel/idt/pic/*
 FOLDERS_W_PREFIX = $(addprefix ${SOURCE}/, $(FOLDERS))
 C_FILES = $(addsuffix .c, $(FOLDERS_W_PREFIX))
 C_HEADERS = $(addsuffix .h, $(FOLDERS_W_PREFIX))
 NASM_FILES = $(addsuffix .s, $(FOLDERS_W_PREFIX))
+BIN_FILES = $(addsuffix .asm, $(FOLDERS_W_PREFIX))
 
 # wildcard to find all c source and header files and assembly object files required to build
 C_SOURCES = $(wildcard ${C_FILES})
 HEADERS = $(wildcard ${C_HEADERS})
 NASM_SOURCES = $(wildcard ${NASM_FILES})
+BIN_SOURCES = $(wildcard ${BIN_FILES})
 
 # generate a list of all the compiled files
 OBJ = ${C_SOURCES:${SOURCE}/%.c=${OUTPUT}/%.o}
 OBJ += ${NASM_SOURCES:${SOURCE}/%.s=${OUTPUT}/%.o}
+
+MODULES = ${BIN_SOURCES:${SOURCE}/%.asm=${OUTPUT}/%.bin}
 
 # do not delete build output folders if make is stopped abruptly
 .PRECIOUS: $(OUTPUT)/. $(OUTPUT)%/.
@@ -42,9 +46,9 @@ CFLAGS = -m32 -nostdlib -ffreestanding -fno-stack-protector \
 LD_FLAGS = -T link.ld -melf_i386
 
 # default: build the iso file
-os.iso: $(OUTPUT)/kernel.elf
-	cp -r $(SOURCE)/iso $(OUTPUT)/iso
-	cp $^ $(OUTPUT)/iso/boot/kernel.elf
+os.iso: $(OUTPUT)/kernel.elf $(MODULES)
+	cp -r $(SOURCE)/iso/boot $(OUTPUT)/iso/boot
+	cp $< $(OUTPUT)/iso/boot/kernel.elf
 	${ISO_MAKER} -R                                        \
                     -b boot/grub/stage2_eltorito              \
                     -no-emul-boot                             \
@@ -64,7 +68,7 @@ $(OUTPUT)%/.:
 	mkdir -p $@
 
 # kernel
-$(OUTPUT)/kernel.elf: $(OBJ) 
+$(OUTPUT)/kernel.elf: $(OBJ)
 	${LD} ${LD_FLAGS} $^ -o $@
 
 # run target

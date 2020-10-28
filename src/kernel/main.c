@@ -65,6 +65,6 @@ int module_main(multiboot_info_t* mbinfo){
 	call_module_t start_program = (call_module_t) address_of_module;
 
   	(start_program)();
-	
+
 	return 0;
 }
